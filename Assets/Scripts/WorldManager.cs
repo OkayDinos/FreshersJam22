@@ -11,8 +11,13 @@ public class WorldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 spawnPos = new Vector3(10,0,0);
-        GameObject tile = Instantiate(prefabTilesList[0], spawnPos, Quaternion.identity);
+        Vector3 spawnPos = new Vector3(0,0,0);
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject tile = Instantiate(prefabTilesList[0], spawnPos, Quaternion.identity);
+            tilesList.Add(tile);
+            spawnPos.x += 10;
+        }
     }
 
     // Update is called once per frame
