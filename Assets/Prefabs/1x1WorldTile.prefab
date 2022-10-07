@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 263327313916090585}
   - component: {fileID: 1872973552769111555}
   m_Layer: 0
-  m_Name: WorldTile
+  m_Name: 1x1WorldTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
