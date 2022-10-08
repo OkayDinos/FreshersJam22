@@ -8,28 +8,32 @@ public class BaseCharacterController : MonoBehaviour
 
     //public SimpleControls Input;
     public InputAction moveAction; //Move inputs
-    public InputAction jumpAction; //Jump inputs
+    public InputAction jumpAction; //Jump input
     public Vector3 velocity; // Velocity 
     public float maxSpeed; // The maximum speed you can run 
     public float accelMultiplier; // How fast you reach the max speed 
     public float jumpVelocity; // how much ms-1 you jump up at
     float horizSpeed; // Velocity on the X axis
     float desiredSpeed; // Desired speed of travel, so if half out on joystick, half of max speed
-    Rigidbody rigidbody; // Rigidbody of the character
-    Transform transform; // Transform of the character
-    Collider collider; // Collider of the character
+    Rigidbody kevinRigidbody; // Rigidbody of the character
+    //Transform playerTransform; // Transform of the character
+    Collider playerCollider; // Collider of the character
+    SpriteRenderer playerSprite; // Player Sprite Renderer
     float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
+
+    public Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        transform = GetComponent<Transform>();
-        collider = GetComponent<BoxCollider>();
+        kevinRigidbody = GetComponent<Rigidbody>();
+        //transform = GetComponent<Transform>();
+        playerCollider = GetComponent<BoxCollider>();
+        playerSprite = GetComponent<SpriteRenderer>();
         moveAction.Enable();
         jumpAction.Enable();
-        distToGround = collider.bounds.extents.y;
-        distToEdge = collider.bounds.extents.x;
+        distToGround = playerCollider.bounds.extents.y;
+        distToEdge = playerCollider.bounds.extents.x;
     }
 
     // Update is called once per frame
@@ -46,7 +50,7 @@ public class BaseCharacterController : MonoBehaviour
         // Jump Action
         if (jumpAction.ReadValue<float>() == 1 && IsGrounded())
         {
-            rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpVelocity, rigidbody.velocity.z);
+            kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, jumpVelocity, kevinRigidbody.velocity.z);
             // If wanting to move left/right launch that way
             if (moveDirection != 0) {
                 // Little funky calculation stops extreme launches
@@ -55,8 +59,16 @@ public class BaseCharacterController : MonoBehaviour
         
         }
 
-        
-        float acceleration = desiredSpeed > horizSpeed ? accelMultiplier : -accelMultiplier; //Get acceleration needed to get there
+        // Change sprite facing direction
+        if (moveDirection > 0 && IsGrounded())
+        {
+            playerSprite.flipX = false;
+        }
+        else if (moveDirection < 0 && IsGrounded()) {
+            playerSprite.flipX = true;
+        }
+
+            float acceleration = desiredSpeed > horizSpeed ? accelMultiplier : -accelMultiplier; //Get acceleration needed to get there
         // Only accelerate if on the ground. 
         if (IsGrounded())
         {
@@ -64,18 +76,20 @@ public class BaseCharacterController : MonoBehaviour
         }
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
         
-        // * Need to fix cannot launch jump at wall make this directional 
-        if ((Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f)) && !IsGrounded()) {horizSpeed = 0;} // Kill horizontal velocity on horizontal colison unless grounded 
-        
+        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
         //Transfer horizontal velocity onto rigid body
-        rigidbody.velocity = (new Vector3(horizSpeed, rigidbody.velocity.y, rigidbody.velocity.z));
+        kevinRigidbody.velocity = (new Vector3(horizSpeed, kevinRigidbody.velocity.y, kevinRigidbody.velocity.z));
 
         // Set Velocity to the public vector3 for viewing in the engine.
-        velocity = rigidbody.velocity;
+        velocity = kevinRigidbody.velocity;
+
+        cameraTransform.position = new Vector3(this.transform.position.x, 3, -10);
     }
 
     // Little ground checker.
     bool IsGrounded() {
         return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
     }
+
 }
