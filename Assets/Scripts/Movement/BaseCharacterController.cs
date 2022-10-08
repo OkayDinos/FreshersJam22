@@ -9,42 +9,81 @@ public class BaseCharacterController : MonoBehaviour
     //public SimpleControls Input;
     public InputAction moveAction; //Move inputs
     public InputAction jumpAction; //Jump input
+    public InputAction attackAction; //Attack input
+
     public Vector3 velocity; // Velocity 
     public float maxSpeed, maxZSpeed; // The maximum speed you can run 
     public Vector2 zBoundaries; // boundaries for the character on the z plane
     public float accelMultiplier; // How fast you reach the max speed 
-    public float jumpVelocity; // how much ms-1 you jump up at
+    public float jumpVelocity, glideSpeed; // how much ms-1 you jump up at | gravatational acceleration when gliding
     float horizSpeed, depthSpeed; // Velocity on the X axis
     float desiredSpeed, desiredZSpeed; // Desired speed of travel, so if half out on joystick, half of max speed
     Rigidbody kevinRigidbody; // Rigidbody of the character
     //Transform playerTransform; // Transform of the character
     Collider playerCollider; // Collider of the character
     SpriteRenderer playerSprite; // Player Sprite Renderer
-    float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
+    float distToGround, distToEdge, distToDepthEdge; // Distances to the edges of the collider (X&Y&Z axis)
+    public float airControlMultipler; // Multiplyer of acceleration whilst mid air, might change to glide 
+    public List<Sprite> animationSprites = new List<Sprite>(); // initialise sprite array of frames
+    float timeSinceLastFrame; // time since last frame alternate
+    int currentFrame; // All animations bear 2 frames this inicates which one we are on 
+    bool usedFlap, flapActive; // true if player has flapped this jump | if space let go mid air then allow flap
+    public float cameraSpeed; // Speed of the cmera moving 
+    Vector3 colliderCenter; // Centerpoint of the collider 
 
-    public Transform cameraTransform;
+    //float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
+    public Camera cameraRef;
+    bool flipped;
+    bool controlsDDisabled; // If the controls are disabled
+    bool attackActive; // If the attack is active
 
     // Start is called before the first frame update
     void Start()
     {
+        flipped = false;
+        attackActive = false;
+        controlsDDisabled = true;
+        cameraRef = FindObjectOfType<Camera>();
+        //previousXMove = 0;
+        flapActive = false;
+        currentFrame = 0;
+        timeSinceLastFrame = 0;
         kevinRigidbody = GetComponent<Rigidbody>();
         //transform = GetComponent<Transform>();
         playerCollider = GetComponent<BoxCollider>();
         playerSprite = GetComponent<SpriteRenderer>();
         moveAction.Enable();
         jumpAction.Enable();
+        attackAction.Enable();
         distToGround = playerCollider.bounds.extents.y;
         distToEdge = playerCollider.bounds.extents.x;
+        distToDepthEdge = playerCollider.bounds.extents.z;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Attack input function
+        if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled)
+        {
+            attackActive = true;
+            Attack();
+        }
 
-        // Get the X/Z - Axis input
-        var moveDirection = moveAction.ReadValue<Vector2>();
-        var xMove = moveDirection.x;
-        var zMove = moveDirection.y;
+        // If grounded set used flap to 0 
+        usedFlap = IsGrounded() ? false : usedFlap;
+
+        // Create the X/Z - Axis input
+        float xMove = 0;
+        float zMove = 0;
+
+        if (!controlsDDisabled) // If controls enabled
+        {
+            // Get the X/Z - Axis input
+            Vector2 moveDirection = moveAction.ReadValue<Vector2>();
+            xMove = moveDirection.x;
+            zMove = moveDirection.y;
+        }
 
         // Calculate speed accounting for changes in desired speed (maxSpeed * moveDirection)
 
@@ -52,16 +91,55 @@ public class BaseCharacterController : MonoBehaviour
         desiredZSpeed = maxZSpeed * zMove;
 
         // Jump Action
-        if (jumpAction.ReadValue<float>() == 1 && IsGrounded())
+        //Check if flap allowed. (must let go of jump button and press again to flap)
+        if (jumpAction.ReadValue<float>() == 0 && !IsGrounded()) {
+            flapActive = true;
+        }
+        //bool groundedAtTimeOfJump = IsGrounded();
+        if (jumpAction.ReadValue<float>() == 1 && (IsGrounded() || (!usedFlap && flapActive)))
         {
+            //Flapping not allowed until jump button released
+            flapActive = false;
+            //If jump was allowed and you are not on ground must be a flap execute flap code. 
+            if (!IsGrounded())
+            {
+                usedFlap = true;
+                playerSprite.sprite = animationSprites[6]; //if flapped change sprite to flapped sprite
+            }
             kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, jumpVelocity, kevinRigidbody.velocity.z);
             // If wanting to move left/right launch that way
             if (xMove != 0) {
                 // Little funky calculation stops extreme launches
                 horizSpeed = horizSpeed / desiredSpeed * desiredSpeed;
+            }
+            if (zMove != 0)
+            {
+                // Little funky calculation stops extreme launches
                 depthSpeed = depthSpeed / desiredZSpeed * desiredZSpeed;
             }
-        
+
+
+        }
+        // Gliding mechanic 
+        //float glideAccel = 0;
+        if (!IsGrounded() && xMove != 0 && kevinRigidbody.velocity.y <= 0) {
+            playerSprite.sprite = animationSprites[7];
+
+            // Allow sprite flip while gliding 
+            if (xMove > 0)
+            {
+                playerSprite.flipX = false;
+            } else if (xMove < 0) { playerSprite.flipX = true; }
+
+
+            kevinRigidbody.useGravity = false;
+            //glideAccel = glideGravity * Time.deltaTime;
+            kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, glideSpeed, kevinRigidbody.velocity.z);
+        } else { kevinRigidbody.useGravity = true; }
+
+        if (!IsGrounded() && xMove == 0 && kevinRigidbody.velocity.y <= 0)
+        {
+            playerSprite.sprite = animationSprites[2]; //Walk 1 as fall sprite
         }
 
         // Change sprite facing direction
@@ -73,6 +151,17 @@ public class BaseCharacterController : MonoBehaviour
             playerSprite.flipX = true;
         }
 
+        if (xMove == 0 && IsGrounded()) {
+            playerSprite.sprite = animationSprites[currentFrame];
+        }
+        else if (xMove != 0 && IsGrounded()) {
+            playerSprite.sprite = animationSprites[currentFrame + 1];
+        }
+
+        if (timeSinceLastFrame >= (0.4 * (maxSpeed / (Mathf.Abs(horizSpeed) + maxSpeed)))) {
+            currentFrame = currentFrame == 1 ? 0 : 1;
+            timeSinceLastFrame = 0;
+        }
         float acceleration = desiredSpeed > horizSpeed ? accelMultiplier : -accelMultiplier; //Get acceleration needed to get there
         float depthAcceleration = desiredZSpeed > depthSpeed ? accelMultiplier : -accelMultiplier; //Get acceleration needed to get there
         // Only accelerate if on the ground. 
@@ -81,12 +170,24 @@ public class BaseCharacterController : MonoBehaviour
             horizSpeed += acceleration * Time.deltaTime; //Execute the acceleration
             depthSpeed += depthAcceleration * Time.deltaTime;
         }
+        else if (kevinRigidbody.velocity.y <= 0) {
+            horizSpeed += acceleration * airControlMultipler * Time.deltaTime; //Execute the acceleration
+            depthSpeed += depthAcceleration * airControlMultipler * Time.deltaTime;
+        }
+
 
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
         depthSpeed = Mathf.Clamp(depthSpeed, -maxZSpeed, maxZSpeed); //Clamp the speed at the max speed
-        
-        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+
+        colliderCenter = playerCollider.bounds.center; //transform.position + new Vector3(0, 0.741446f, 0); //+ playerCollider.bounds.center;
+
+        //Stop Velocity at X collisions
+        if (Physics.Raycast(colliderCenter, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(colliderCenter, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+
+        //Stop Velocity at Z collisions
+        if (Physics.Raycast(colliderCenter, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(colliderCenter, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
 
         // Stops Z being more or less than max and min
         float clampedZ;
@@ -95,16 +196,113 @@ public class BaseCharacterController : MonoBehaviour
 
         //Transfer horizontal velocity onto rigid body
         kevinRigidbody.velocity = (new Vector3(horizSpeed, kevinRigidbody.velocity.y, depthSpeed));
-        
+
         // Set Velocity to the public vector3 for viewing in the engine.
         velocity = kevinRigidbody.velocity;
 
-        cameraTransform.position = new Vector3(this.transform.position.x, 3, -10);
-    }
+        
+        // Add DT to time of last frame
+        timeSinceLastFrame += Time.deltaTime;
 
+        //For gliding set previous x move to the current one
+        //previousXMove = xMove;
+        
+    }
+    private void FixedUpdate()
+    {
+        // Set camera position
+        if (this.transform.position.x >= cameraRef.transform.position.x + 3)
+        {
+            //cameraTransform.position = new Vector3(this.transform.position.x - 3, 3, -10);
+            Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -10);
+            //Vector3 camVelocity = new Vector3(3, 0, 0);//Mathf.Abs(targCamPos.x - cameraTransform.position.x)
+            cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, targCamPos, cameraSpeed * Time.deltaTime);
+        }
+        else if (this.transform.position.x <= cameraRef.transform.position.x - 3)
+        {
+            Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -10);
+            //Vector3 camVelocity = new Vector3(targCamPos.x - cameraTransform.position.x - 3, 0, 0);
+            cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, targCamPos, cameraSpeed * Time.deltaTime);//Vector3.SmoothDamp(cameraTransform.position, targCamPos, ref camVelocity, 0.3f);
+        }
+    }
     // Little ground checker.
     bool IsGrounded() {
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+        //Debug.DrawRay(colliderCenter, new Vector3(0, -(distToGround + 0.1f), 0),Color.green);
+        return (Physics.Raycast(colliderCenter, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
     }
 
+    private void OnDrawGizmos()
+    {
+        
+    }
+
+    public async void Begin(float _startPos)
+    {
+        float time = 1;
+
+        float timer = 0;
+
+        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 0.5f, 0.3f), Quaternion.identity);
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        timer = 0;
+
+        time = 2;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer/ time), Mathf.Lerp(0.3f, -10, timer/ time)), Quaternion.identity);
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        controlsDDisabled = false;
+
+        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -10), Quaternion.identity);
+    }
+
+    public async void Attack()
+    {
+        float time = 0.2f;
+
+        float timer = 0;
+
+        GetComponent<SpriteRenderer>().color = Color.blue;
+
+        float atkDir = 1;
+
+        if (flipped == true)
+        {
+            atkDir = -1;
+        }
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(distToEdge * atkDir, 0, 0), new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+
+            foreach (Collider col in hit)
+            {
+                if (col.tag == "Enemy")
+                {
+                    col.GetComponent<EnemyController>().TakeDamage(transform.position, 25); // second argument is damage
+                }
+            }
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        GetComponent<SpriteRenderer>().color = Color.white;
+
+        attackActive = false;
+    }
 }

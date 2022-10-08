@@ -29,11 +29,11 @@ Transform:
   m_GameObject: {fileID: 9117052689896124547}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.53, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &770998625324648919
 SpriteRenderer:
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -195707425, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!54 &8453217279786385656
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -114,8 +114,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 0.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4901023, y: 1.482892, z: 0.20000002}
+  m_Center: {x: 0, y: 0.741446, z: 0}
 --- !u!114 &8453217279786385652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +176,14 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Move
       m_Flags: 8
+    - m_Name: 
+      m_Id: 66ef4ad8-8db0-400b-a233-21a5e3ae286a
+      m_Path: <Gamepad>/leftStick
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 0
     m_Flags: 0
   jumpAction:
     m_Name: Jump
@@ -193,6 +201,39 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Jump
       m_Flags: 0
+    - m_Name: 
+      m_Id: e603f442-399b-4a8e-a1d3-e05b4631fa4b
+      m_Path: <Gamepad>/buttonSouth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Jump
+      m_Flags: 0
+    m_Flags: 0
+  attackAction:
+    m_Name: Attack
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 98b7e03b-6894-4930-a49d-1d2a365091dd
+    m_Processors: 
+    m_Interactions: Press
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 0d8d7fc7-69b8-4484-846b-a9af802f9062
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Attack
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 47d0e50f-2c56-4c88-a822-759fd80ddd17
+      m_Path: <Gamepad>/buttonWest
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Attack
+      m_Flags: 0
     m_Flags: 0
   velocity: {x: 0, y: 0, z: 0}
   maxSpeed: 7
@@ -200,4 +241,16 @@ MonoBehaviour:
   zBoundaries: {x: 0, y: 3}
   accelMultiplier: 30
   jumpVelocity: 7
-  cameraTransform: {fileID: 0}
+  glideSpeed: -1.5
+  airControlMultipler: 0.3
+  animationSprites:
+  - {fileID: -195707425, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: 1872673030, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: -1984034968, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: 110518382, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: 1642843487, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: 1961713527, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: 46164837, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
+  - {fileID: 277164026, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
+  cameraSpeed: 1.4
+  cameraRef: {fileID: 0}
