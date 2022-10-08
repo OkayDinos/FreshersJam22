@@ -20,7 +20,7 @@ public class BaseCharacterController : MonoBehaviour
     //Transform playerTransform; // Transform of the character
     Collider playerCollider; // Collider of the character
     SpriteRenderer playerSprite; // Player Sprite Renderer
-    float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
+    float distToGround, distToEdge, distToDepthEdge; // Distances to the edges of the collider (X&Y&Z axis)
     public float airControlMultipler; // Multiplyer of acceleration whilst mid air, might change to glide 
     public List<Sprite> animationSprites = new List<Sprite>(); // initialise sprite array of frames
     float timeSinceLastFrame; // time since last frame alternate
@@ -44,6 +44,7 @@ public class BaseCharacterController : MonoBehaviour
         jumpAction.Enable();
         distToGround = playerCollider.bounds.extents.y;
         distToEdge = playerCollider.bounds.extents.x;
+        distToDepthEdge = playerCollider.bounds.extents.z;
     }
 
     // Update is called once per frame
@@ -152,8 +153,13 @@ public class BaseCharacterController : MonoBehaviour
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
         depthSpeed = Mathf.Clamp(depthSpeed, -maxZSpeed, maxZSpeed); //Clamp the speed at the max speed
         
+        //Stop Velocity at X collisions
         if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
         if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+
+        //Stop Velocity at Z collisions
+        if (Physics.Raycast(transform.position, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(transform.position, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
 
         // Stops Z being more or less than max and min
         float clampedZ;
