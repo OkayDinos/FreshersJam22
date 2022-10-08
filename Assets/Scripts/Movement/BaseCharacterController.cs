@@ -22,12 +22,17 @@ public class BaseCharacterController : MonoBehaviour
     SpriteRenderer playerSprite; // Player Sprite Renderer
     float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
     public float airControlMultipler;
+    public List<Sprite> animationSprites = new List<Sprite>();
+    float timeSinceLastFrame;
+    int currentFrame;
 
     public Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
     {
+        currentFrame = 0;
+        timeSinceLastFrame = 0;
         kevinRigidbody = GetComponent<Rigidbody>();
         //transform = GetComponent<Transform>();
         playerCollider = GetComponent<BoxCollider>();
@@ -80,6 +85,17 @@ public class BaseCharacterController : MonoBehaviour
             playerSprite.flipX = true;
         }
 
+        if (xMove == 0 && IsGrounded()) { 
+            playerSprite.sprite = animationSprites[currentFrame];
+        }
+        else if (xMove != 0 && IsGrounded()) { 
+            playerSprite.sprite = animationSprites[currentFrame+1]; 
+        }
+
+        if (timeSinceLastFrame >= (0.4 * (maxSpeed/(Mathf.Abs(horizSpeed)+maxSpeed)))) {
+            currentFrame = currentFrame == 1 ? 0 : 1;
+            timeSinceLastFrame = 0;
+        }
         float acceleration = desiredSpeed > horizSpeed ? accelMultiplier : -accelMultiplier; //Get acceleration needed to get there
         float depthAcceleration = desiredZSpeed > depthSpeed ? accelMultiplier : -accelMultiplier; //Get acceleration needed to get there
         // Only accelerate if on the ground. 
@@ -111,7 +127,11 @@ public class BaseCharacterController : MonoBehaviour
         // Set Velocity to the public vector3 for viewing in the engine.
         velocity = kevinRigidbody.velocity;
 
+        // Set camera position
         cameraTransform.position = new Vector3(this.transform.position.x, 3, -10);
+
+        // Add DT to time of last frame
+        timeSinceLastFrame += Time.deltaTime;
     }
 
     // Little ground checker.
