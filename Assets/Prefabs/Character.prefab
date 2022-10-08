@@ -176,6 +176,14 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Move
       m_Flags: 8
+    - m_Name: 
+      m_Id: 66ef4ad8-8db0-400b-a233-21a5e3ae286a
+      m_Path: <Gamepad>/leftStick
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 0
     m_Flags: 0
   jumpAction:
     m_Name: Jump
@@ -188,6 +196,14 @@ MonoBehaviour:
     - m_Name: 
       m_Id: ad432ab4-705c-472c-8b18-6ed65a698043
       m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Jump
+      m_Flags: 0
+    - m_Name: 
+      m_Id: e603f442-399b-4a8e-a1d3-e05b4631fa4b
+      m_Path: <Gamepad>/buttonSouth
       m_Interactions: 
       m_Processors: 
       m_Groups: 

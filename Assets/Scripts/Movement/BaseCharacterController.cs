@@ -154,12 +154,12 @@ public class BaseCharacterController : MonoBehaviour
         depthSpeed = Mathf.Clamp(depthSpeed, -maxZSpeed, maxZSpeed); //Clamp the speed at the max speed
         
         //Stop Velocity at X collisions
-        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
 
         //Stop Velocity at Z collisions
-        if (Physics.Raycast(transform.position, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(transform.position, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
+        if (Physics.Raycast(transform.position, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(transform.position, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
 
         // Stops Z being more or less than max and min
         float clampedZ;
@@ -185,7 +185,7 @@ public class BaseCharacterController : MonoBehaviour
 
     // Little ground checker.
     bool IsGrounded() {
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+        return (Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
     }
 
 }
