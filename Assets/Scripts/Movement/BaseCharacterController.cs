@@ -21,12 +21,12 @@ public class BaseCharacterController : MonoBehaviour
     Collider playerCollider; // Collider of the character
     SpriteRenderer playerSprite; // Player Sprite Renderer
     float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
-
-    public Transform cameraTransform;
+    Camera cameraRef;
 
     // Start is called before the first frame update
     void Start()
     {
+        cameraRef = FindObjectOfType<Camera>();
         kevinRigidbody = GetComponent<Rigidbody>();
         //transform = GetComponent<Transform>();
         playerCollider = GetComponent<BoxCollider>();
@@ -99,7 +99,7 @@ public class BaseCharacterController : MonoBehaviour
         // Set Velocity to the public vector3 for viewing in the engine.
         velocity = kevinRigidbody.velocity;
 
-        cameraTransform.position = new Vector3(this.transform.position.x, 3, -10);
+        cameraRef.transform.position = new Vector3(this.transform.position.x, 3, -10);
     }
 
     // Little ground checker.
