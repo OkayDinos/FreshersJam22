@@ -21,16 +21,18 @@ public class BaseCharacterController : MonoBehaviour
     Collider playerCollider; // Collider of the character
     SpriteRenderer playerSprite; // Player Sprite Renderer
     float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
-    public float airControlMultipler;
-    public List<Sprite> animationSprites = new List<Sprite>();
-    float timeSinceLastFrame;
-    int currentFrame;
+    public float airControlMultipler; // Multiplyer of acceleration whilst mid air, might change to glide 
+    public List<Sprite> animationSprites = new List<Sprite>(); // initialise sprite array of frames
+    float timeSinceLastFrame; // time since last frame alternate
+    int currentFrame; // All animations bear 2 frames this inicates which one we are on 
+    bool usedFlap, flapActive; // true if player has flapped this jump | if space let go mid air then allow flap
 
     public Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
     {
+        flapActive = false;
         currentFrame = 0;
         timeSinceLastFrame = 0;
         kevinRigidbody = GetComponent<Rigidbody>();
@@ -47,6 +49,9 @@ public class BaseCharacterController : MonoBehaviour
     void Update()
     {
 
+        // If grounded set used flap to 0 
+        usedFlap = IsGrounded() ? false : usedFlap;
+
         // Get the X/Z - Axis input
         var moveDirection = moveAction.ReadValue<Vector2>();
         var xMove = moveDirection.x;
@@ -58,8 +63,21 @@ public class BaseCharacterController : MonoBehaviour
         desiredZSpeed = maxZSpeed * zMove;
 
         // Jump Action
-        if (jumpAction.ReadValue<float>() == 1 && IsGrounded())
+        //Check if flap allowed. (must let go of jump button and press again to flap)
+        if (jumpAction.ReadValue<float>() == 0 && !IsGrounded()) { 
+            flapActive = true;
+        }
+        //bool groundedAtTimeOfJump = IsGrounded();
+        if (jumpAction.ReadValue<float>() == 1 && (IsGrounded() || (!usedFlap && flapActive))) 
         {
+            //Flapping not allowed until jump button released
+            flapActive = false;
+            //If jump was allowed and you are not on ground must be a flap execute flap code. 
+            if (!IsGrounded())
+            {
+                usedFlap = true;
+                playerSprite.sprite = animationSprites[6]; //if flapped change sprite to flapped sprite
+            }
             kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, jumpVelocity, kevinRigidbody.velocity.z);
             // If wanting to move left/right launch that way
             if (xMove != 0) {
@@ -73,6 +91,7 @@ public class BaseCharacterController : MonoBehaviour
                 //horizSpeed = horizSpeed / desiredSpeed * desiredSpeed;
                 depthSpeed = depthSpeed / desiredZSpeed * desiredZSpeed;
             }
+            
 
         }
 
@@ -132,6 +151,8 @@ public class BaseCharacterController : MonoBehaviour
 
         // Add DT to time of last frame
         timeSinceLastFrame += Time.deltaTime;
+
+        
     }
 
     // Little ground checker.
