@@ -58,16 +58,31 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        List<GameObject> enemiesToDelete = new List<GameObject>();
+
         foreach (GameObject enemy in enemies)
         {
-            if (enemy.transform.position.x > worldManager.playerRef.transform.position.x + 90)
+            if (enemy.GetComponent<EnemyController>().toDelete == true)
             {
-                enemy.transform.position = new Vector3(worldManager.playerRef.transform.position.x - 80, 1, Random.Range(1, 2));
+                enemiesToDelete.Add(enemy);
             }
-            else if (enemy.transform.position.x < worldManager.playerRef.transform.position.x - 90)
+            else
             {
-                enemy.transform.position = new Vector3(worldManager.playerRef.transform.position.x + 80, 1, Random.Range(1, 2));
+                if (enemy.transform.position.x > worldManager.playerRef.transform.position.x + 90)
+                {
+                    enemy.transform.position = new Vector3(worldManager.playerRef.transform.position.x - 80, 1, Random.Range(1, 2));
+                }
+                else if (enemy.transform.position.x < worldManager.playerRef.transform.position.x - 90)
+                {
+                    enemy.transform.position = new Vector3(worldManager.playerRef.transform.position.x + 80, 1, Random.Range(1, 2));
+                }
             }
+        }
+
+        foreach (GameObject enemy in enemiesToDelete)
+        {
+            enemies.Remove(enemy);
+            Destroy(enemy);
         }
     }
 }

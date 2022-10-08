@@ -40,6 +40,17 @@ public class BaseCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        { // use this for attack collision detection
+        Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+
+        foreach (Collider col in hit)
+        {
+            if (col.tag == "Enemy")
+            {
+                col.GetComponent<EnemyController>().TakeDamage(transform.position, 40); // second argument is damage
+            }
+        }
+        }
 
         // Get the X/Z - Axis input
         var moveDirection = moveAction.ReadValue<Vector2>();
