@@ -73,12 +73,18 @@ public class Scoreboard : MonoBehaviour
 
     public void nextl(int number)
     {
+        int l_PreviousStarter = scoreboardstarter;
+
         scoreboardstarter += number;
 
         scoreboardstarter = Mathf.Clamp(scoreboardstarter, 1, 41);
 
-        Debug.Log(scoreboardstarter + "" + (splitArray.Length / 2));
-        if (scoreboardstarter + 8 < (splitArray.Length / 2))
+        Debug.Log($"StartFromScore: {scoreboardstarter} | TotalScores: {splitArray.Length}");
+        if (scoreboardstarter + 8 < splitArray.Length)
             WhatTFDoICallTHis(scoreboardstarter);
+        else
+        {
+            scoreboardstarter = l_PreviousStarter;
+        }
     }
 }
