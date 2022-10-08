@@ -200,6 +200,7 @@ MonoBehaviour:
   zBoundaries: {x: 0, y: 3}
   accelMultiplier: 30
   jumpVelocity: 7
+  glideSpeed: -1.5
   airControlMultipler: 0.3
   animationSprites:
   - {fileID: -2100445964, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
@@ -208,5 +209,6 @@ MonoBehaviour:
   - {fileID: -736265346, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
   - {fileID: 371604042, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
   - {fileID: 1478702357, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
+  - {fileID: 46164837, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
   - {fileID: 46164837, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
   cameraTransform: {fileID: 0}

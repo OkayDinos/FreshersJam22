@@ -356,7 +356,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: karatekevinrealistic_9
+      name: glide
       rect:
         serializedVersion: 2
         x: 110
@@ -515,6 +515,7 @@ TextureImporter:
     nameFileIdTable:
       karatekevinrealistic_10: 1016028089
       punch: 1478702357
+      glide: 277164026
       walking1: -1791650384
       karatekevinrealistic_12: -21985176
       karatekevinrealistic_8: -1012427242
@@ -524,7 +525,6 @@ TextureImporter:
       idle2: -838126009
       walking2: -736265346
       whiteSquareLol: 587142928
-      karatekevinrealistic_9: 277164026
       kick: 371604042
       karatekevinrealistic_14: 548675527
       flap: 46164837

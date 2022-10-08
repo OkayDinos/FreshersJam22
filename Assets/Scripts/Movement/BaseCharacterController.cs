@@ -13,7 +13,7 @@ public class BaseCharacterController : MonoBehaviour
     public float maxSpeed, maxZSpeed; // The maximum speed you can run 
     public Vector2 zBoundaries; // boundaries for the character on the z plane
     public float accelMultiplier; // How fast you reach the max speed 
-    public float jumpVelocity; // how much ms-1 you jump up at
+    public float jumpVelocity, glideSpeed; // how much ms-1 you jump up at | gravatational acceleration when gliding
     float horizSpeed, depthSpeed; // Velocity on the X axis
     float desiredSpeed, desiredZSpeed; // Desired speed of travel, so if half out on joystick, half of max speed
     Rigidbody kevinRigidbody; // Rigidbody of the character
@@ -26,12 +26,13 @@ public class BaseCharacterController : MonoBehaviour
     float timeSinceLastFrame; // time since last frame alternate
     int currentFrame; // All animations bear 2 frames this inicates which one we are on 
     bool usedFlap, flapActive; // true if player has flapped this jump | if space let go mid air then allow flap
-
+    //float previousXMove;
     public Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
     {
+        //previousXMove = 0;
         flapActive = false;
         currentFrame = 0;
         timeSinceLastFrame = 0;
@@ -94,9 +95,28 @@ public class BaseCharacterController : MonoBehaviour
             
 
         }
+        // Gliding mechanic 
+        //float glideAccel = 0;
+        if (!IsGrounded() && xMove != 0 && kevinRigidbody.velocity.y <= 0) {
+            playerSprite.sprite = animationSprites[7];
+            
+            // Allow sprite flip while gliding 
+            if (xMove > 0)
+            {
+                playerSprite.flipX = false;
+            } else if (xMove < 0) { playerSprite.flipX = true; }
+            
+            
+            kevinRigidbody.useGravity = false;
+            //glideAccel = glideGravity * Time.deltaTime;
+            kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, glideSpeed, kevinRigidbody.velocity.z);
+        } else { kevinRigidbody.useGravity = true; }
+        if (!IsGrounded() && xMove == 0 && kevinRigidbody.velocity.y <= 0)
+        { playerSprite.sprite = animationSprites[2]; //Walk 1 as fall sprite
+        }
 
-        // Change sprite facing direction
-        if (xMove > 0 && IsGrounded())
+            // Change sprite facing direction
+            if (xMove > 0 && IsGrounded())
         {
             playerSprite.flipX = false;
         }
@@ -123,7 +143,7 @@ public class BaseCharacterController : MonoBehaviour
             horizSpeed += acceleration * Time.deltaTime; //Execute the acceleration
             depthSpeed += depthAcceleration * Time.deltaTime;
         }
-        else {
+        else if (kevinRigidbody.velocity.y <= 0) {
             horizSpeed += acceleration * airControlMultipler * Time.deltaTime; //Execute the acceleration
             depthSpeed += depthAcceleration * airControlMultipler * Time.deltaTime;
         }
@@ -132,8 +152,8 @@ public class BaseCharacterController : MonoBehaviour
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
         depthSpeed = Mathf.Clamp(depthSpeed, -maxZSpeed, maxZSpeed); //Clamp the speed at the max speed
         
-        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
 
         // Stops Z being more or less than max and min
         float clampedZ;
@@ -152,6 +172,8 @@ public class BaseCharacterController : MonoBehaviour
         // Add DT to time of last frame
         timeSinceLastFrame += Time.deltaTime;
 
+        //For gliding set previous x move to the current one
+        //previousXMove = xMove;
         
     }
 
