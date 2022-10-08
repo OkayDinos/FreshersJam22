@@ -27,6 +27,7 @@ public class BaseCharacterController : MonoBehaviour
     int currentFrame; // All animations bear 2 frames this inicates which one we are on 
     bool usedFlap, flapActive; // true if player has flapped this jump | if space let go mid air then allow flap
     public float cameraSpeed; // Speed of the cmera moving 
+    Vector3 colliderCenter; // Centerpoint of the collider 
     //float previousXMove;
     public Transform cameraTransform;
 
@@ -154,13 +155,15 @@ public class BaseCharacterController : MonoBehaviour
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
         depthSpeed = Mathf.Clamp(depthSpeed, -maxZSpeed, maxZSpeed); //Clamp the speed at the max speed
 
+        colliderCenter = playerCollider.bounds.center; //transform.position + new Vector3(0, 0.741446f, 0); //+ playerCollider.bounds.center;
+
         //Stop Velocity at X collisions
-        if (Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+        if (Physics.Raycast(colliderCenter, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(colliderCenter, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
 
         //Stop Velocity at Z collisions
-        if (Physics.Raycast(transform.position, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(transform.position, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position - Vector3.up * (distToGround - 0.1f), -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(transform.position + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
+        if (Physics.Raycast(colliderCenter, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
+        if (Physics.Raycast(colliderCenter, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
 
         // Stops Z being more or less than max and min
         float clampedZ;
@@ -200,7 +203,12 @@ public class BaseCharacterController : MonoBehaviour
     }
     // Little ground checker.
     bool IsGrounded() {
-        return (Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(transform.position + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
+        //Debug.DrawRay(colliderCenter, new Vector3(0, -(distToGround + 0.1f), 0),Color.green);
+        return (Physics.Raycast(colliderCenter, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
     }
 
+    private void OnDrawGizmos()
+    {
+        
+    }
 }
