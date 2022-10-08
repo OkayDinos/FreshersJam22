@@ -7,19 +7,18 @@ public class BaseCharacterController : MonoBehaviour
 {
 
     //public SimpleControls Input;
-    public InputAction moveAction;
-    public InputAction jumpAction;
-    public Vector3 velocity;
-    public float maxSpeed;
-    public float accelMultiplier;
-    public float jumpVelocity;
-    float horizSpeed;
-    float desiredSpeed;
-    Rigidbody rigidbody;
-    Transform transform;
-    Collider collider;
-    float distToGround, distToEdge;
-
+    public InputAction moveAction; //Move inputs
+    public InputAction jumpAction; //Jump inputs
+    public Vector3 velocity; // Velocity 
+    public float maxSpeed; // The maximum speed you can run 
+    public float accelMultiplier; // How fast you reach the max speed 
+    public float jumpVelocity; // how much ms-1 you jump up at
+    float horizSpeed; // Velocity on the X axis
+    float desiredSpeed; // Desired speed of travel, so if half out on joystick, half of max speed
+    Rigidbody rigidbody; // Rigidbody of the character
+    Transform transform; // Transform of the character
+    Collider collider; // Collider of the character
+    float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +49,8 @@ public class BaseCharacterController : MonoBehaviour
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpVelocity, rigidbody.velocity.z);
             // If wanting to move left/right launch that way
             if (moveDirection != 0) {
-                horizSpeed = desiredSpeed;
+                // Little funky calculation stops extreme launches
+                horizSpeed = horizSpeed / desiredSpeed * desiredSpeed;
             }
         
         }
@@ -63,13 +63,18 @@ public class BaseCharacterController : MonoBehaviour
             horizSpeed += acceleration * Time.deltaTime; //Execute the acceleration
         }
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
+        
+        // * Need to fix cannot launch jump at wall make this directional 
         if ((Physics.Raycast(transform.position, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(transform.position, -Vector3.right, distToEdge + 0.1f)) && !IsGrounded()) {horizSpeed = 0;} // Kill horizontal velocity on horizontal colison unless grounded 
+        
         //Transfer horizontal velocity onto rigid body
         rigidbody.velocity = (new Vector3(horizSpeed, rigidbody.velocity.y, rigidbody.velocity.z));
 
         // Set Velocity to the public vector3 for viewing in the engine.
         velocity = rigidbody.velocity;
     }
+
+    // Little ground checker.
     bool IsGrounded() {
         return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
     }
