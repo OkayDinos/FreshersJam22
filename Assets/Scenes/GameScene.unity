@@ -206,14 +206,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8453217279786385652, guid: b7ae908e284641548a5c25144514409b, type: 3}
-      propertyPath: maxSpeed
-      value: 700
-      objectReference: {fileID: 0}
-    - target: {fileID: 8453217279786385652, guid: b7ae908e284641548a5c25144514409b, type: 3}
-      propertyPath: cameraTransform
-      value: 
-      objectReference: {fileID: 985457699}
     - target: {fileID: 9117052689896124547, guid: b7ae908e284641548a5c25144514409b, type: 3}
       propertyPath: m_Name
       value: Character
