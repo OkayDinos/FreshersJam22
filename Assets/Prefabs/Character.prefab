@@ -200,4 +200,5 @@ MonoBehaviour:
   zBoundaries: {x: 0, y: 3}
   accelMultiplier: 30
   jumpVelocity: 7
+  airControlMultipler: 0.3
   cameraTransform: {fileID: 0}

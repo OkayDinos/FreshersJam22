@@ -21,6 +21,7 @@ public class BaseCharacterController : MonoBehaviour
     Collider playerCollider; // Collider of the character
     SpriteRenderer playerSprite; // Player Sprite Renderer
     float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
+    public float airControlMultipler;
 
     public Transform cameraTransform;
 
@@ -59,9 +60,15 @@ public class BaseCharacterController : MonoBehaviour
             if (xMove != 0) {
                 // Little funky calculation stops extreme launches
                 horizSpeed = horizSpeed / desiredSpeed * desiredSpeed;
+                //depthSpeed = depthSpeed / desiredZSpeed * desiredZSpeed;
+            }
+            if (zMove != 0)
+            {
+                // Little funky calculation stops extreme launches
+                //horizSpeed = horizSpeed / desiredSpeed * desiredSpeed;
                 depthSpeed = depthSpeed / desiredZSpeed * desiredZSpeed;
             }
-        
+
         }
 
         // Change sprite facing direction
@@ -81,6 +88,11 @@ public class BaseCharacterController : MonoBehaviour
             horizSpeed += acceleration * Time.deltaTime; //Execute the acceleration
             depthSpeed += depthAcceleration * Time.deltaTime;
         }
+        else {
+            horizSpeed += acceleration * airControlMultipler * Time.deltaTime; //Execute the acceleration
+            depthSpeed += depthAcceleration * airControlMultipler * Time.deltaTime;
+        }
+        
 
         horizSpeed = Mathf.Clamp(horizSpeed, -maxSpeed, maxSpeed); //Clamp the speed at the max speed
         depthSpeed = Mathf.Clamp(depthSpeed, -maxZSpeed, maxZSpeed); //Clamp the speed at the max speed
