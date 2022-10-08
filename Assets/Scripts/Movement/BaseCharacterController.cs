@@ -9,6 +9,8 @@ public class BaseCharacterController : MonoBehaviour
     //public SimpleControls Input;
     public InputAction moveAction; //Move inputs
     public InputAction jumpAction; //Jump input
+    public InputAction attackAction; //Attack input
+
     public Vector3 velocity; // Velocity 
     public float maxSpeed, maxZSpeed; // The maximum speed you can run 
     public Vector2 zBoundaries; // boundaries for the character on the z plane
@@ -30,11 +32,17 @@ public class BaseCharacterController : MonoBehaviour
     Vector3 colliderCenter; // Centerpoint of the collider 
 
     //float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
-    Camera cameraRef;
+    public Camera cameraRef;
+    bool flipped;
+    bool controlsDDisabled; // If the controls are disabled
+    bool attackActive; // If the attack is active
 
     // Start is called before the first frame update
     void Start()
     {
+        flipped = false;
+        attackActive = false;
+        controlsDDisabled = true;
         cameraRef = FindObjectOfType<Camera>();
         //previousXMove = 0;
         flapActive = false;
@@ -46,6 +54,7 @@ public class BaseCharacterController : MonoBehaviour
         playerSprite = GetComponent<SpriteRenderer>();
         moveAction.Enable();
         jumpAction.Enable();
+        attackAction.Enable();
         distToGround = playerCollider.bounds.extents.y;
         distToEdge = playerCollider.bounds.extents.x;
         distToDepthEdge = playerCollider.bounds.extents.z;
@@ -54,25 +63,27 @@ public class BaseCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        { // use this for attack collision detection
-        Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+        // Attack input function
+        if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled)
+        {
+            attackActive = true;
+            Attack();
+        }
 
         // If grounded set used flap to 0 
         usedFlap = IsGrounded() ? false : usedFlap;
 
-        foreach (Collider col in hit)
-        {
-            if (col.tag == "Enemy")
-            {
-                col.GetComponent<EnemyController>().TakeDamage(transform.position, 40); // second argument is damage
-            }
-        }
-        }
+        // Create the X/Z - Axis input
+        float xMove = 0;
+        float zMove = 0;
 
-        // Get the X/Z - Axis input
-        var moveDirection = moveAction.ReadValue<Vector2>();
-        var xMove = moveDirection.x;
-        var zMove = moveDirection.y;
+        if (!controlsDDisabled) // If controls enabled
+        {
+            // Get the X/Z - Axis input
+            Vector2 moveDirection = moveAction.ReadValue<Vector2>();
+            xMove = moveDirection.x;
+            zMove = moveDirection.y;
+        }
 
         // Calculate speed accounting for changes in desired speed (maxSpeed * moveDirection)
 
@@ -223,5 +234,75 @@ public class BaseCharacterController : MonoBehaviour
     private void OnDrawGizmos()
     {
         
+    }
+
+    public async void Begin(float _startPos)
+    {
+        float time = 1;
+
+        float timer = 0;
+
+        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 0.5f, 0.3f), Quaternion.identity);
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        timer = 0;
+
+        time = 2;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer/ time), Mathf.Lerp(0.3f, -10, timer/ time)), Quaternion.identity);
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        controlsDDisabled = false;
+
+        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -10), Quaternion.identity);
+    }
+
+    public async void Attack()
+    {
+        float time = 0.2f;
+
+        float timer = 0;
+
+        GetComponent<SpriteRenderer>().color = Color.blue;
+
+        float atkDir = 1;
+
+        if (flipped == true)
+        {
+            atkDir = -1;
+        }
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(distToEdge * atkDir, 0, 0), new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+
+            foreach (Collider col in hit)
+            {
+                if (col.tag == "Enemy")
+                {
+                    col.GetComponent<EnemyController>().TakeDamage(transform.position, 25); // second argument is damage
+                }
+            }
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        GetComponent<SpriteRenderer>().color = Color.white;
+
+        attackActive = false;
     }
 }

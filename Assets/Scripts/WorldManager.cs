@@ -16,6 +16,8 @@ public class WorldManager : MonoBehaviour
 
     EnemyManager enemyManager;
 
+    [SerializeField] GameObject platform;
+
     public static WorldManager singleton;
 
     void Awake()
@@ -63,6 +65,8 @@ public class WorldManager : MonoBehaviour
         worldCentre = (worldSize * 10) / 2;
 
         playerRef.transform.SetPositionAndRotation(new Vector3(worldCentre, 1, 1), Quaternion.identity);
+
+        playerRef.GetComponent<BaseCharacterController>().Begin(worldCentre);
     }
 
     void MoveTile(bool _rightDirection) // false = left direction
@@ -95,6 +99,8 @@ public class WorldManager : MonoBehaviour
     void Update()
     {
         worldCentre = playerRef.transform.position.x;
+
+        platform.transform.position = new Vector3(worldCentre, 0, 0);
 
         if (tilesList[0].tile.transform.position.x < worldCentre - ((worldSize + 1) * 10 / 2))
         {

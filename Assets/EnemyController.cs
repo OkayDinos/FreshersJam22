@@ -23,6 +23,8 @@ public class EnemyController : MonoBehaviour
 
     public bool toDelete;
 
+    [SerializeField] GameObject healthBar;
+
     // Start is called before the first frame update
 
     void Awake()
@@ -121,9 +123,11 @@ public class EnemyController : MonoBehaviour
 
         DamageReaction(_dmg, dmgDir);
 
+        healthBar.transform.localScale = new Vector3(angerValue / 100, 0.06f, 1);
+
         if (angerValue < 100)
         {
-            stunTime = 1f;
+            stunTime = 0.67f;
 
             currentState = AIState.INJURED;
         }
@@ -144,7 +148,7 @@ public class EnemyController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * 10), transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * 20), transform.position.y, transform.position.z);
 
             await System.Threading.Tasks.Task.Yield();
         }
