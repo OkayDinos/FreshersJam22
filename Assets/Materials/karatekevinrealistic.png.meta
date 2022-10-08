@@ -40,10 +40,10 @@ TextureImporter:
     wrapU: 0
     wrapV: 0
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -54,7 +54,7 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -165,18 +165,370 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: idle1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 500.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16405411362516040a3513b9ae490382
+      internalID: -2100445964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle2
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 500.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dabac52368da75e498f6e35c540f2dfd
+      internalID: -838126009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walking1
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 500.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeacbf31afc5b1d48a49e9ae4f3a8ce6
+      internalID: -1791650384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: whiteSquareLol
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 500.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e46998176dd8e814187ed177d39aecfb
+      internalID: 587142928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walking2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 334.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44cf1d05a9ee69c4ea027127626fe677
+      internalID: -736265346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kick
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 334.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66f3b3e8a7fe57a4082b3596ebb3eab6
+      internalID: 371604042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: punch
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 334.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fcb05390d11cec488d603552abcda99
+      internalID: 1478702357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flap
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 334.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 961e8204a9affb44b9caf720d5b26065
+      internalID: 46164837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 168.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fa29321608d96349ba94350dc7d14ac
+      internalID: -1012427242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glide
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 168.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb96c7d7a94897644b4a1b14856685cd
+      internalID: 277164026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_10
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 168.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d61fc9e4de39bf543b16ddf42c80ded6
+      internalID: 1016028089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_11
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 168.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e483c884ddbfa34d82a7b28568d0174
+      internalID: 1404998195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9778e9072c8d7c947a2a40ad40e76bd6
+      internalID: -21985176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_13
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 2.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c7c6c3c5b01a7f4f9fcc61bbd64f98e
+      internalID: -529746780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_14
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 2.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ced0af9b5dd44cd4f9a8695954c4a4e5
+      internalID: 548675527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karatekevinrealistic_15
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 2.25
+        width: 110.5
+        height: 166.75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c9e5e71e3fb89e43b3d1a4887ba733a
+      internalID: -1792123532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ed2b1445b68f9d04d9b4e2b1f7325598
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      karatekevinrealistic_10: 1016028089
+      punch: 1478702357
+      glide: 277164026
+      walking1: -1791650384
+      karatekevinrealistic_12: -21985176
+      karatekevinrealistic_8: -1012427242
+      karatekevinrealistic_15: -1792123532
+      idle1: -2100445964
+      karatekevinrealistic_11: 1404998195
+      idle2: -838126009
+      walking2: -736265346
+      whiteSquareLol: 587142928
+      kick: 371604042
+      karatekevinrealistic_14: 548675527
+      flap: 46164837
+      karatekevinrealistic_13: -529746780
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 
