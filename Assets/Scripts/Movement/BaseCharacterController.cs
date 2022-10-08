@@ -29,7 +29,7 @@ public class BaseCharacterController : MonoBehaviour
     public float cameraSpeed; // Speed of the cmera moving 
     Vector3 colliderCenter; // Centerpoint of the collider 
 
-    float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
+    //float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
     Camera cameraRef;
 
     // Start is called before the first frame update
@@ -200,18 +200,18 @@ public class BaseCharacterController : MonoBehaviour
     private void FixedUpdate()
     {
         // Set camera position
-        if (this.transform.position.x >= cameraTransform.position.x + 3)
+        if (this.transform.position.x >= cameraRef.transform.position.x + 3)
         {
             //cameraTransform.position = new Vector3(this.transform.position.x - 3, 3, -10);
             Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -10);
             //Vector3 camVelocity = new Vector3(3, 0, 0);//Mathf.Abs(targCamPos.x - cameraTransform.position.x)
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, targCamPos, cameraSpeed * Time.deltaTime);
+            cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, targCamPos, cameraSpeed * Time.deltaTime);
         }
-        else if (this.transform.position.x <= cameraTransform.position.x - 3)
+        else if (this.transform.position.x <= cameraRef.transform.position.x - 3)
         {
             Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -10);
             //Vector3 camVelocity = new Vector3(targCamPos.x - cameraTransform.position.x - 3, 0, 0);
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, targCamPos, cameraSpeed * Time.deltaTime);//Vector3.SmoothDamp(cameraTransform.position, targCamPos, ref camVelocity, 0.3f);
+            cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, targCamPos, cameraSpeed * Time.deltaTime);//Vector3.SmoothDamp(cameraTransform.position, targCamPos, ref camVelocity, 0.3f);
         }
     }
     // Little ground checker.
