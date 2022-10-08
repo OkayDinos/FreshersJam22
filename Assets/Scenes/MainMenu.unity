@@ -2611,42 +2611,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PanelScoreboard
       objectReference: {fileID: 0}
-    - target: {fileID: 2572808266316330904, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 689780115806642964}
-    - target: {fileID: 2572808266316330904, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: nextl
-      objectReference: {fileID: 0}
-    - target: {fileID: 2572808266316330904, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Scoreboard, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2572808267192479136, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 689780115806642964}
-    - target: {fileID: 2572808267192479136, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: nextl
-      objectReference: {fileID: 0}
-    - target: {fileID: 2572808267192479136, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Scoreboard, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8079925032612359664, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_Color.b
-      value: 0.098039225
-      objectReference: {fileID: 0}
-    - target: {fileID: 8079925032612359664, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_Color.g
-      value: 0.098039225
-      objectReference: {fileID: 0}
-    - target: {fileID: 8079925032612359664, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
-      propertyPath: m_Color.r
-      value: 0.098039225
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d17a9eaca189fd47b08c769ed100738, type: 3}
