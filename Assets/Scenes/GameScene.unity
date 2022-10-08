@@ -123,55 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &310888105
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 310888107}
-  - component: {fileID: 310888106}
-  m_Layer: 0
-  m_Name: WorldManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &310888106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310888105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fa4a8863e55bf047914e09ecb6f00f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabTilesList:
-  - {fileID: 11400000, guid: 767071aef5fb7ad4b8b0e2610db62ce7, type: 2}
-  - {fileID: 11400000, guid: 7ac68809195b5b74dba75ff2ddc198ce, type: 2}
-  worldCentre: 0
-  playerRef: {fileID: 635704749}
---- !u!4 &310888107
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310888105}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &501049770
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,6 +133,8 @@ GameObject:
   m_Component:
   - component: {fileID: 501049772}
   - component: {fileID: 501049771}
+  - component: {fileID: 501049773}
+  - component: {fileID: 501049774}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -214,8 +167,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &501049773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501049770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa4a8863e55bf047914e09ecb6f00f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabTilesList:
+  - {fileID: 11400000, guid: 767071aef5fb7ad4b8b0e2610db62ce7, type: 2}
+  - {fileID: 11400000, guid: 7ac68809195b5b74dba75ff2ddc198ce, type: 2}
+  playerRef: {fileID: 635704749}
+--- !u!114 &501049774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501049770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b76381cb46769c488d952e3f1c11f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 4851948159909836956, guid: 67627fbe4ad6056419faff0226c30bf3, type: 3}
 --- !u!1001 &635704748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -224,13 +206,21 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8453217279786385652, guid: b7ae908e284641548a5c25144514409b, type: 3}
+      propertyPath: maxSpeed
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 8453217279786385652, guid: b7ae908e284641548a5c25144514409b, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 985457699}
     - target: {fileID: 9117052689896124547, guid: b7ae908e284641548a5c25144514409b, type: 3}
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
     - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
       propertyPath: m_LocalPosition.x

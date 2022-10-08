@@ -12,12 +12,32 @@ public class WorldManager : MonoBehaviour
 
     float worldCentre;
 
-    [SerializeField] GameObject playerRef;
+    public GameObject playerRef;
+
+    EnemyManager enemyManager;
+
+    public static WorldManager singleton;
+
+    void Awake()
+    {
+        if (singleton == null)
+        {
+            singleton = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        enemyManager = EnemyManager.singleton;
+
         GenerateWorld();
+
+        enemyManager.SpawnInitialEnemies(playerRef.transform.position);
     }
 
     void GenerateWorld()
