@@ -10,7 +10,9 @@ public class WorldManager : MonoBehaviour
 
     int worldSize;
 
-    [SerializeField] float worldCentre;
+    float worldCentre;
+
+    [SerializeField] GameObject playerRef;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,8 @@ public class WorldManager : MonoBehaviour
         }
 
         worldCentre = (worldSize * 10) / 2;
+
+        playerRef.transform.SetPositionAndRotation(new Vector3(worldCentre, 1, 1), Quaternion.identity);
     }
 
     void MoveTile(bool _rightDirection) // false = left direction
@@ -70,6 +74,8 @@ public class WorldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        worldCentre = playerRef.transform.position.x;
+
         if (tilesList[0].tile.transform.position.x < worldCentre - ((worldSize + 1) * 10 / 2))
         {
             MoveTile(true);
