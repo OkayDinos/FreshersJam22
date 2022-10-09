@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 public enum GameState { Playing, Paused, Ended }
-public enum PointsType { NormalAttack, FourForThree, Uppercut, EatSausageRoll };
+public enum PointsType { NormalAttack, FourForThree, Uppercut, EatSausageRoll, WrapperPickup };
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     }*/
     int lastTextRandomiser = 0, textSelector = 0;
-    public async void AddScore(PointsType pointsType)
+    public async void AddScore(PointsType pointsType,float pointsMultiplier = 1)
     {
         float time = 0.5f;
 
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
             case PointsType.EatSausageRoll:
                 do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
                 boomColour = new Color(200, 120, 0, 1);
-                scoreToAdd = 250;
+                scoreToAdd = Mathf.RoundToInt(250 * pointsMultiplier);
                 switch (textSelector)
                 {
                     case 0:
@@ -127,6 +127,29 @@ public class GameManager : MonoBehaviour
                         break;
                     case 4:
                         boomText = "Filled up by the Sausage!";
+                        break;
+                }
+                break;
+            case PointsType.WrapperPickup:
+                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
+                boomColour = new Color(220, 220, 220, 1);
+                scoreToAdd = 50;
+                switch (textSelector)
+                {
+                    case 0:
+                        boomText = "x";
+                        break;
+                    case 1:
+                        boomText = "x";
+                        break;
+                    case 2:
+                        boomText = "x";
+                        break;
+                    case 3:
+                        boomText = "x";
+                        break;
+                    case 4:
+                        boomText = "x";
                         break;
                 }
                 break;
