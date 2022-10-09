@@ -396,7 +396,7 @@ MeshRenderer:
   - {fileID: -7578316341650344861, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
   - {fileID: -8321355774241193989, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
   - {fileID: -3637989199352487668, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
-  - {fileID: -5664140371920183919, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
+  - {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
   - {fileID: -3366833076684490648, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
   - {fileID: -4961880224539048062, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
   - {fileID: -5655588655190239835, guid: 2f685411eb62abe4da4bdc0fc7f40975, type: 3}
@@ -540,5 +540,5 @@ Transform:
   - {fileID: 7269116873779985700}
   - {fileID: 4112616838717269760}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
