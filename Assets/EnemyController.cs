@@ -150,7 +150,7 @@ public class EnemyController : MonoBehaviour
             Runaway(dmgDir);
             currentState = AIState.RUNNINGAWAY;
 
-            GameManager.instance.AddScore(1750, attackType);
+            GameManager.instance.AddScore(attackType);
 
         }
     }
