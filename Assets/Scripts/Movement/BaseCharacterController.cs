@@ -414,4 +414,47 @@ public class BaseCharacterController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(Vector3 _enemyPos, EnemyAtkType _attackType)
+    {
+        int dir = 0;
+        if (_enemyPos.x > transform.position.x)
+        {
+            dir = -1;
+            flipped = true;
+        }
+        else
+        {
+            dir = 1;
+            flipped = false;
+        }
+        DamageReaction(dir);
+    }
+
+    async void DamageReaction(int _direction)
+    {
+        controlsDDisabled = true;
+
+        float time = 0.4f;
+
+        float timer = 0;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            float scale = Mathf.Lerp(0.85f, 1, timer / time);
+
+            transform.localScale = new Vector3(scale/2, scale/2, scale/2);
+
+            playerSprite.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
+
+            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4, 0, timer / time)), transform.position.y, transform.position.z);
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        transform.localScale = new Vector3(0.5f,0.5f,0.5f);
+
+        controlsDDisabled = false;
+    }
 }
