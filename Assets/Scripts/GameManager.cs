@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviour
 
         score += scoreToAdd;
         MainScoreText.SetText(score.ToString("0000"));
-        boomText += $"\n<size=60%>+{scoreToAdd.ToString("0000")}";
+        boomText += $"\n<size=60%>+{scoreToAdd.ToString()}";
         scoreAdditionText.color = boomColour;
         Color boomColourTransparent = new Color(boomColour.r, boomColour.g, boomColour.b, 0);
         Color boomColourEchoStarter = new Color(boomColour.r, boomColour.g, boomColour.b, 0.5f);
