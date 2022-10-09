@@ -46,7 +46,7 @@ public class WorldManager : MonoBehaviour
     {
         worldSize = 0;
 
-        int targetWorldSize = 20;
+        int targetWorldSize = 100;
         
         Vector3 nextTileSpawnPos = new Vector3(0, 0, 0);
 
@@ -57,7 +57,7 @@ public class WorldManager : MonoBehaviour
 
             Quaternion currentTileSpawnRot = Quaternion.identity;
 
-            if (random == 2)
+            if (!(random == 2))
             {
                 currentTileSpawnRot = Quaternion.Euler(0, 180, 0);
             }
