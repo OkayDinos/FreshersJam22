@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         switch (pointsType)
         {
             case PointsType.NormalAttack:
-                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
+                do { textSelector = Random.Range(0, 5); } while (textSelector == lastTextRandomiser);
                 boomColour = new Color(0, 255, 0, 1);
                 scoreToAdd = 1000;
                 switch (textSelector)
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
                 boomColour = new Color(255, 200, 0, 1);
                 break;
             case PointsType.EatSausageRoll:
-                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
+                do { textSelector = Random.Range(0, 5); } while (textSelector == lastTextRandomiser);
                 boomColour = new Color(200, 120, 0, 1);
                 scoreToAdd = Mathf.RoundToInt(250 * pointsMultiplier);
                 switch (textSelector)
@@ -131,25 +131,25 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case PointsType.WrapperPickup:
-                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
+                do { textSelector = Random.Range(0, 5); } while (textSelector == lastTextRandomiser);
                 boomColour = new Color(220, 220, 220, 1);
                 scoreToAdd = 50;
                 switch (textSelector)
                 {
                     case 0:
-                        boomText = "x";
+                        boomText = "Good Citizen";
                         break;
                     case 1:
-                        boomText = "x";
+                        boomText = "Litter Pecker!";
                         break;
                     case 2:
-                        boomText = "x";
+                        boomText = "City Cleanup";
                         break;
                     case 3:
-                        boomText = "x";
+                        boomText = "Trash Trashed!";
                         break;
                     case 4:
-                        boomText = "x";
+                        boomText = "+ Used Sausage Wrapper";
                         break;
                 }
                 break;
