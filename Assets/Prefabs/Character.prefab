@@ -250,7 +250,8 @@ MonoBehaviour:
   - {fileID: 110518382, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
   - {fileID: 1642843487, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
   - {fileID: 1961713527, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
-  - {fileID: 46164837, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
-  - {fileID: 277164026, guid: 05c34ce3d1903ac45afbc13547aed0a6, type: 3}
+  - {fileID: -1922760340, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
+  - {fileID: 2043980550, guid: d15d057dfe9446e45a9e1ca01415cd31, type: 3}
   cameraSpeed: 1.4
   cameraRef: {fileID: 0}
+  hungerBar: {fileID: 0}
