@@ -105,7 +105,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(Vector3 _playerPos, float _dmg)
+    public void TakeDamage(Vector3 _playerPos, float _dmg, PointsType attackType)
     {
         if (currentState == AIState.INJURED || currentState == AIState.RUNNINGAWAY)
         {
@@ -129,7 +129,7 @@ public class EnemyController : MonoBehaviour
 
         if (angerValue < 100)
         {
-            stunTime = 0.67f;
+            stunTime = 0.2f;
 
             currentState = AIState.INJURED;
         }
@@ -137,6 +137,9 @@ public class EnemyController : MonoBehaviour
         {
             Runaway(dmgDir);
             currentState = AIState.RUNNINGAWAY;
+
+            GameManager.instance.AddScore(1750, attackType);
+
         }
     }
 

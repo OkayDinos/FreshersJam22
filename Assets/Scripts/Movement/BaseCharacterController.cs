@@ -4,8 +4,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class BaseCharacterController : MonoBehaviour
 {
+
 
     //public SimpleControls Input;
     public InputAction moveAction; //Move inputs
@@ -41,6 +43,7 @@ public class BaseCharacterController : MonoBehaviour
     float timeSinceLastAttack; // time in s since last attacking move
     bool wasLastAttackKick; //false if punch true if kick
     float lastAttackButton, comboPath; //Stops holding buttons for attacks | holds a number if it will be a multi move combo
+    
 
     // Start is called before the first frame update
     void Start()
@@ -279,6 +282,7 @@ public class BaseCharacterController : MonoBehaviour
 
     public async void Attack()
     {
+        PointsType attackType = PointsType.NormalAttack;
         float time = 0.2f;
         float damageThisTime  = 25;
         //Combo Checker
@@ -287,6 +291,7 @@ public class BaseCharacterController : MonoBehaviour
             damageThisTime = 50;
             comboPath = 0;
             playerSprite.color = new Color(255,200,0);
+            attackType = PointsType.Uppercut;
         }
         else if (!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 0) {
             comboPath = 1;
@@ -296,6 +301,7 @@ public class BaseCharacterController : MonoBehaviour
             damageThisTime = 50;
             playerSprite.color = new Color(255, 200, 0);
             comboPath = 0;
+            attackType = PointsType.FourForThree;
         }
         else
         {
@@ -337,7 +343,7 @@ public class BaseCharacterController : MonoBehaviour
             {
                 if (col.tag == "Enemy")
                 {
-                    col.GetComponent<EnemyController>().TakeDamage(transform.position, damageThisTime); // second argument is damage
+                    col.GetComponent<EnemyController>().TakeDamage(transform.position, damageThisTime, attackType); // second argument is damage
                 }
             }
 
