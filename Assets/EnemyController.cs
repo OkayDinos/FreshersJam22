@@ -72,7 +72,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        atkCD = 0;
+        atkCD = Random.Range(1f, 5f);
         activeSprites = grandmaSprites;
 
         if (Random.value < 0.5f)
@@ -82,7 +82,7 @@ public class EnemyController : MonoBehaviour
 
         stepCD = 0.2f;
 
-        foodValue = 100;
+        foodValue = 100 + Random.Range(0f,20f);
 
         startedEating = false;
 
@@ -292,7 +292,7 @@ public class EnemyController : MonoBehaviour
 
     async Task DamageReaction(float _strength, int _direction)
     {
-        float time = 0.5f;
+        float time = 0.5f * (_strength / 25);
 
         float timer = 0;
 
@@ -306,7 +306,7 @@ public class EnemyController : MonoBehaviour
 
             spriteRenderer.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
 
-            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4, 0, timer / time)), transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4 * (_strength / 25), 0, timer / time)), transform.position.y, transform.position.z);
 
             await System.Threading.Tasks.Task.Yield();
         }
