@@ -63,7 +63,7 @@ public class BaseCharacterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timeAlive = 60;
+        timeAlive = 120;
         hungerMax = 100;
         hunger = hungerMax;
         flipped = false;
@@ -444,7 +444,7 @@ public class BaseCharacterController : MonoBehaviour
     {
         timeAlive += Time.deltaTime;
 
-        hunger -= timeAlive * 0.0003f;
+        hunger -= timeAlive * 0.0006f;
 
         hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
 
