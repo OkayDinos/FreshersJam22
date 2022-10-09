@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public enum AIState { IDLE, WALKING, ATTACKING, INJURED, RUNNINGAWAY }
 
@@ -8,6 +9,7 @@ public enum EnemySprites { IDLE = 0, WALKING1 = 1, WALKING2 = 2, RUNNING1 = 3, R
 
 public class EnemyController : MonoBehaviour
 {
+    List<Task> tasks = new List<Task>();
     AIState currentState;
 
     EnemySprites currentSprite;
@@ -208,7 +210,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    async void Runaway(int _direction)
+    void Runaway(int _direction)
+    {
+        tasks.Add(RunawayTask(_direction));
+    }
+
+    async Task RunawayTask(int _direction)
     {
         Drops();
 
