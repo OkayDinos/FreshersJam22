@@ -39,4 +39,9 @@ public class GameManager : MonoBehaviour
         currentGameState = GameState.Paused;
         PauseMenu.instance.gameObject.SetActive(true);
     }
+
+    public void GameOver()
+    {
+        // It's over
+    }
 }
