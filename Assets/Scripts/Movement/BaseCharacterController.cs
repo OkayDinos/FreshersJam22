@@ -42,9 +42,15 @@ public class BaseCharacterController : MonoBehaviour
     bool wasLastAttackKick; //false if punch true if kick
     float lastAttackButton, comboPath; //Stops holding buttons for attacks | holds a number if it will be a multi move combo
 
+    float hunger, hungerMax; // Hunger of the character
+    float timeAlive; // Time alive
+
     // Start is called before the first frame update
     void Start()
     {
+        timeAlive = 0;
+        hungerMax = 100;
+        hunger = hungerMax;
         flipped = false;
         attackActive = false;
         controlsDDisabled = true;
@@ -72,6 +78,9 @@ public class BaseCharacterController : MonoBehaviour
     {
         //Check for pickups
         CheckPickup();
+
+        //Update Hunfer
+        GetHungry();
 
         // Attack input function
         if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled && timeSinceLastAttack > 0.2 && lastAttackButton == 0)
@@ -362,4 +371,17 @@ public class BaseCharacterController : MonoBehaviour
                 }
             }
     }
+
+    void GetHungry()
+    {
+        timeAlive += Time.deltaTime;
+
+        hunger -= timeAlive * 0.1f;
+
+        if (hunger <= 0)
+        {
+            // It's okay, Kevin knows karate
+        }
+    }
+
 }
