@@ -8,7 +8,9 @@ public class Pickup : MonoBehaviour
 {
     [SerializeField] List<Sprite> sausageStates = new List<Sprite>();
 
-    int sausageState = 0;
+    public int sausageState = 0;
+
+    public PickupType pickupType;
 
     void Awake()
     {
@@ -56,6 +58,8 @@ public class Pickup : MonoBehaviour
 
     public async void OnDropped(PickupType _type, float _value = 0)
     {
+        pickupType = _type;
+
         if (_type == PickupType.SAUSAGEROLL)
         {
             SetSausageState(_value);
