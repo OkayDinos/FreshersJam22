@@ -188,8 +188,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabTilesList:
+  - {fileID: 11400000, guid: 1bb17a64825856149a99241bf55a767f, type: 2}
+  - {fileID: 11400000, guid: 3e7c5678aabfcdc4a8d9c19ce34562ba, type: 2}
   - {fileID: 11400000, guid: 767071aef5fb7ad4b8b0e2610db62ce7, type: 2}
+  - {fileID: 11400000, guid: 95fe1c912b370c74d9ee8627d496c658, type: 2}
   - {fileID: 11400000, guid: 7ac68809195b5b74dba75ff2ddc198ce, type: 2}
+  - {fileID: 11400000, guid: b23245f2f89b1fe4191d790b1ec168bf, type: 2}
   - {fileID: 11400000, guid: 16f637de8abe02347b61ba3f98c5d44b, type: 2}
   playerRef: {fileID: 635704749}
   platform: {fileID: 552149075}
