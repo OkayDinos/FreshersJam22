@@ -45,9 +45,17 @@ public class BaseCharacterController : MonoBehaviour
     float lastAttackButton, comboPath; //Stops holding buttons for attacks | holds a number if it will be a multi move combo
     
 
+    float hunger, hungerMax; // Hunger of the character
+    float timeAlive; // Time alive
+
+    [SerializeField] GameObject hungerBar; // Health bar prefab
+
     // Start is called before the first frame update
     void Start()
     {
+        timeAlive = 0;
+        hungerMax = 100;
+        hunger = hungerMax;
         flipped = false;
         attackActive = false;
         controlsDDisabled = true;
@@ -68,6 +76,8 @@ public class BaseCharacterController : MonoBehaviour
         distToDepthEdge = playerCollider.bounds.extents.z;
 
         lastAttackButton = 0;
+
+        hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
     }
 
     // Update is called once per frame
@@ -75,6 +85,9 @@ public class BaseCharacterController : MonoBehaviour
     {
         //Check for pickups
         CheckPickup();
+
+        //Update Hunfer
+        GetHungry();
 
         // Attack input function
         if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled && timeSinceLastAttack > 0.2 && lastAttackButton == 0)
@@ -360,12 +373,30 @@ public class BaseCharacterController : MonoBehaviour
     {
         Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
 
-            foreach (Collider col in hit)
+        foreach (Collider col in hit)
+        {
+            if (col.tag == "Pickup")
             {
-                if (col.tag == "Pickup")
-                {
-                    col.GetComponent<Pickup>().OnPickedUp();
-                }
+                col.GetComponent<Pickup>().OnPickedUp();
             }
+        }
     }
+
+    void GetHungry()
+    {
+        timeAlive += Time.deltaTime;
+
+        hunger -= timeAlive * 0.0002f;
+
+        hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
+
+        if (hunger <= 0)
+        {
+            // It's okay, Kevin knows karate
+            GameManager.instance.GameOver();
+
+            controlsDDisabled = true;
+        }
+    }
+
 }

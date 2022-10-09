@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
+    [SerializeField] List<Sprite> sausageStates = new List<Sprite>();
+
+    int sausageState = 0;
+
     void Awake()
     {
         GetComponent<BoxCollider>().enabled = false;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        OnDropped();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void OnPickedUp()
@@ -26,8 +18,44 @@ public class Pickup : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public async void OnDropped()
+    void SetSausageState(float _value)
     {
+        if(_value > 75f)
+        {
+            sausageState = 0;
+        }
+        else if(_value > 50f)
+        {
+            sausageState = 1;
+        }
+        else if(_value > 40f)
+        {
+            sausageState = 2;
+        }
+        else if(_value > 30f)
+        {
+            sausageState = 3;
+        }
+        else if(_value > 20f)
+        {
+            sausageState = 4;
+        }
+        else if(_value > 10f)
+        {
+            sausageState = 5;
+        }
+        else
+        {
+            sausageState = 6;
+        }
+
+        GetComponent<SpriteRenderer>().sprite = sausageStates[sausageState];
+    }
+
+    public async void OnDropped(float _value)
+    {
+        SetSausageState(_value);
+
         float time = 1;
 
         float timer = 0;
@@ -40,6 +68,8 @@ public class Pickup : MonoBehaviour
         {
             dir = -1;
         }
+
+        transform.position = new Vector3(transform.position.x, transform.position.y - 0.75f, transform.position.z);
 
         Vector3 originalPos = transform.position;
 

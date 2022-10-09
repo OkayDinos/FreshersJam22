@@ -23,7 +23,13 @@ public class EnemyController : MonoBehaviour
 
     public bool toDelete;
 
+    float foodValue;
+
+    bool startedEating;
+
     [SerializeField] GameObject healthBar;
+
+    [SerializeField] GameObject eatBar;
 
     [SerializeField] GameObject pickupDrop;
 
@@ -35,6 +41,10 @@ public class EnemyController : MonoBehaviour
     }
     void Start()
     {
+        foodValue = 100;
+
+        startedEating = false;
+
         currentState = AIState.IDLE;
 
         walkCD = Random.value * 5;
@@ -53,6 +63,7 @@ public class EnemyController : MonoBehaviour
                 {
                     StartWalk();
                 }
+                EatStuff();
                 break;
             case AIState.WALKING:
                 transform.position = new Vector3(transform.position.x + (Time.deltaTime * walkVel), transform.position.y, transform.position.z);
@@ -62,6 +73,7 @@ public class EnemyController : MonoBehaviour
                     currentState = AIState.IDLE;
                     walkCD = 2 + (Random.value * 3);
                 }
+                EatStuff();
                 break;
             case AIState.ATTACKING:
 
@@ -125,7 +137,7 @@ public class EnemyController : MonoBehaviour
 
         DamageReaction(_dmg, dmgDir);
 
-        healthBar.transform.localScale = new Vector3(angerValue / 100, 0.06f, 1);
+        healthBar.transform.localScale = new Vector3(1-(angerValue / 100), 0.06f, 1);
 
         if (angerValue < 100)
         {
@@ -146,6 +158,10 @@ public class EnemyController : MonoBehaviour
     async void Runaway(int _direction)
     {
         Drops();
+
+        healthBar.SetActive(false);
+
+        eatBar.SetActive(false);
 
         float time = 1.5f;
 
@@ -189,8 +205,43 @@ public class EnemyController : MonoBehaviour
 
     void Drops()
     {
-        GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
+        if (foodValue > 0)
+        {
+            GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
 
-        drop.GetComponent<Pickup>().OnDropped();
+            drop.GetComponent<Pickup>().OnDropped(foodValue);
+        }
+    }
+
+    void EatStuff()
+    {
+        if (startedEating == false)
+        {
+            if (Mathf.Abs(transform.position.x - WorldManager.singleton.playerRef.transform.position.x) < 10f)
+            {
+                startedEating = true;
+            }
+        }   
+        else
+        {
+            if (foodValue > 0)
+            {
+                foodValue -= Time.deltaTime * 10;
+
+                eatBar.transform.localScale = new Vector3(foodValue / 100, 0.06f, 1);
+            }
+            else
+            {
+                int runawayDir = 1;
+
+                if (transform.position.x < WorldManager.singleton.playerRef.transform.position.x)
+                {
+                    runawayDir = -1;
+                }
+
+                Runaway(runawayDir);
+                currentState = AIState.RUNNINGAWAY;
+            }
+        }
     }
 }

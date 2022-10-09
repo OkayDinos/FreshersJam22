@@ -175,4 +175,9 @@ public class GameManager : MonoBehaviour
         //scoreAdditionTransform.localScale = new Vector3(1, 1, 1);
         //scoreAdditionText.color = new Color(0, 255, 0, 0);
     }
+
+    public void GameOver()
+    {
+        // It's over
+    }
 }
