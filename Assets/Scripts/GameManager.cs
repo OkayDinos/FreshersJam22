@@ -59,7 +59,8 @@ public class GameManager : MonoBehaviour
         scoreAdditionTransform.localScale = Mathf.Lerp(new Vector3(1,1,1), new Vector3(2, 2, 2));
 
     }*/
-    public async void AddScore(int scoreToAdd, PointsType pointsType)
+    int lastTextRandomiser = 0, textSelector = 0;
+    public async void AddScore(PointsType pointsType)
     {
         float time = 0.5f;
 
@@ -67,14 +68,15 @@ public class GameManager : MonoBehaviour
 
         string boomText = "";
         Color boomColour;
-        int textSelector;
+        int scoreToAdd = 0;
 
         //Colour & Text Selector
         switch (pointsType)
         {
             case PointsType.NormalAttack:
-                textSelector = Random.Range(0, 4);
+                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
                 boomColour = new Color(0, 255, 0, 1);
+                scoreToAdd = 1000;
                 switch (textSelector)
                 {
                     case 0:
@@ -97,15 +99,18 @@ public class GameManager : MonoBehaviour
                 break;
             case PointsType.FourForThree:
                 boomText = "4 For 3";
+                scoreToAdd = 1500;
                 boomColour = new Color(255, 200, 0, 1);
                 break;
             case PointsType.Uppercut:
                 boomText = "Uppercut!";
+                scoreToAdd = 2000;
                 boomColour = new Color(255, 200, 0, 1);
                 break;
             case PointsType.EatSausageRoll:
-                textSelector = Random.Range(0, 4);
+                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
                 boomColour = new Color(200, 120, 0, 1);
+                scoreToAdd = 250;
                 switch (textSelector)
                 {
                     case 0:
@@ -174,6 +179,8 @@ public class GameManager : MonoBehaviour
 
         //scoreAdditionTransform.localScale = new Vector3(1, 1, 1);
         //scoreAdditionText.color = new Color(0, 255, 0, 0);
+
+        lastTextRandomiser = textSelector;
     }
 
     public void GameOver()
