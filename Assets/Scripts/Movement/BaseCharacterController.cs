@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,6 +38,10 @@ public class BaseCharacterController : MonoBehaviour
     bool controlsDDisabled; // If the controls are disabled
     bool attackActive; // If the attack is active
 
+    float timeSinceLastAttack; // time in s since last attacking move
+    bool wasLastAttackKick; //false if punch true if kick
+    float lastAttackButton, comboPath; //Stops holding buttons for attacks | holds a number if it will be a multi move combo
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,13 +63,15 @@ public class BaseCharacterController : MonoBehaviour
         distToGround = playerCollider.bounds.extents.y;
         distToEdge = playerCollider.bounds.extents.x;
         distToDepthEdge = playerCollider.bounds.extents.z;
+
+        lastAttackButton = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Attack input function
-        if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled)
+        if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled && timeSinceLastAttack > 0.2 && lastAttackButton == 0)
         {
             attackActive = true;
             Attack();
@@ -203,10 +210,13 @@ public class BaseCharacterController : MonoBehaviour
         
         // Add DT to time of last frame
         timeSinceLastFrame += Time.deltaTime;
+        // Add DT to time since last attack
+        timeSinceLastAttack += Time.deltaTime;
 
-        //For gliding set previous x move to the current one
-        //previousXMove = xMove;
-        
+        //For gliding set previous x move to the current one | Not used
+        lastAttackButton = attackAction.ReadValue<float>();
+
+
     }
     private void FixedUpdate()
     {
@@ -231,15 +241,10 @@ public class BaseCharacterController : MonoBehaviour
         return (Physics.Raycast(colliderCenter, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
     }
 
-    private void OnDrawGizmos()
-    {
-        
-    }
-
     public async void Begin(float _startPos)
     {
         float time = 1;
-
+        
         float timer = 0;
 
         cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 0.5f, 0.3f), Quaternion.identity);
@@ -272,11 +277,44 @@ public class BaseCharacterController : MonoBehaviour
     public async void Attack()
     {
         float time = 0.2f;
+        float damageThisTime  = 25;
+        //Combo Checker
+        if (wasLastAttackKick && timeSinceLastAttack < 1.5 && this.transform.position.y <= 1.2)
+        {
+            damageThisTime = 50;
+            comboPath = 0;
+            playerSprite.color = new Color(255,200,0);
+        }
+        else if (!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 0) {
+            comboPath = 1;
+        }
+        else if(!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 1)
+        {
+            damageThisTime = 50;
+            playerSprite.color = new Color(255, 200, 0);
+            comboPath = 0;
+        }
+        else
+        {
+            comboPath = 0;
+        }
+
+        timeSinceLastAttack = 0;
 
         float timer = 0;
 
-        GetComponent<SpriteRenderer>().color = Color.blue;
-
+        Sprite lastSprite = playerSprite.sprite;
+        Sprite attackSprite;
+        if (this.transform.position.y > 1.2)
+        {
+            attackSprite = animationSprites[4];
+            wasLastAttackKick = true;
+        }
+        else
+        {
+            attackSprite = animationSprites[5];
+            wasLastAttackKick = false;  
+        }
         float atkDir = 1;
 
         if (flipped == true)
@@ -288,20 +326,23 @@ public class BaseCharacterController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
+            playerSprite.sprite = attackSprite;
+
             Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(distToEdge * atkDir, 0, 0), new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
 
             foreach (Collider col in hit)
             {
                 if (col.tag == "Enemy")
                 {
-                    col.GetComponent<EnemyController>().TakeDamage(transform.position, 25); // second argument is damage
+                    col.GetComponent<EnemyController>().TakeDamage(transform.position, damageThisTime); // second argument is damage
                 }
             }
 
             await System.Threading.Tasks.Task.Yield();
         }
 
-        GetComponent<SpriteRenderer>().color = Color.white;
+        playerSprite.sprite = lastSprite;
+        playerSprite.color = new Color(255, 255, 255);
 
         attackActive = false;
     }
