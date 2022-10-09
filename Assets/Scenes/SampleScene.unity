@@ -151,9 +151,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
+    - target: {fileID: 9117052689896124547, guid: b7ae908e284641548a5c25144514409b, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 9169140366455153227, guid: b7ae908e284641548a5c25144514409b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -624,6 +640,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7ac68809195b5b74dba75ff2ddc198ce, type: 2}
   - {fileID: 11400000, guid: b23245f2f89b1fe4191d790b1ec168bf, type: 2}
   - {fileID: 11400000, guid: 16f637de8abe02347b61ba3f98c5d44b, type: 2}
+  - {fileID: 11400000, guid: 1eebca78fa4f4cb44ba2440d5c5c8bb1, type: 2}
+  - {fileID: 11400000, guid: 82c5b67ef9199e74aa5e03f1b2fa3e7e, type: 2}
   playerRef: {fileID: 81081373}
   platform: {fileID: 1965198586}
 --- !u!114 &1859478092

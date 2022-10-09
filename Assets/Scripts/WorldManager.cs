@@ -48,7 +48,7 @@ public class WorldManager : MonoBehaviour
     {
         worldSize = 0;
 
-        int targetWorldSize = 20;
+        int targetWorldSize = 30;
         
         Vector3 nextTileSpawnPos = new Vector3(0, 0, 0);
 
@@ -63,7 +63,7 @@ public class WorldManager : MonoBehaviour
 
             duplicateList.Add(random);
 
-            if (duplicateList.Count > 4)
+            if (duplicateList.Count > 7)
             {
                 duplicateList.RemoveAt(0);
             }
