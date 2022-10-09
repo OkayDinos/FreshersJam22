@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\xA9 2022\nA game for AGDS FreshersJam22"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0602a84a3e03f3840949a792c84f5915, type: 2}
+  m_sharedMaterial: {fileID: -5507990735485119456, guid: 0602a84a3e03f3840949a792c84f5915, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -214,8 +214,8 @@ MonoBehaviour:
 
     Cormac Somerville'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0602a84a3e03f3840949a792c84f5915, type: 2}
+  m_sharedMaterial: {fileID: -5507990735485119456, guid: 0602a84a3e03f3840949a792c84f5915, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
