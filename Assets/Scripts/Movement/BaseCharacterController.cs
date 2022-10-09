@@ -63,7 +63,7 @@ public class BaseCharacterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timeAlive = 0;
+        timeAlive = 60;
         hungerMax = 100;
         hunger = hungerMax;
         flipped = false;
