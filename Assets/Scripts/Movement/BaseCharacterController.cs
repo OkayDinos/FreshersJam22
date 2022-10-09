@@ -122,7 +122,7 @@ public class BaseCharacterController : MonoBehaviour
             flapActive = true;
         }
         //bool groundedAtTimeOfJump = IsGrounded();
-        if (jumpAction.ReadValue<float>() == 1 && (IsGrounded() || (!usedFlap && flapActive)))
+        if (jumpAction.ReadValue<float>() == 1 && (IsGrounded() || (!usedFlap && flapActive)) && !controlsDDisabled)
         {
             //Flapping not allowed until jump button released
             flapActive = false;
@@ -243,13 +243,13 @@ public class BaseCharacterController : MonoBehaviour
         if (this.transform.position.x >= cameraRef.transform.position.x + 3)
         {
             //cameraTransform.position = new Vector3(this.transform.position.x - 3, 3, -10);
-            Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -10);
+            Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -6.2f);
             //Vector3 camVelocity = new Vector3(3, 0, 0);//Mathf.Abs(targCamPos.x - cameraTransform.position.x)
             cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, targCamPos, cameraSpeed * Time.deltaTime);
         }
         else if (this.transform.position.x <= cameraRef.transform.position.x - 3)
         {
-            Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -10);
+            Vector3 targCamPos = new Vector3(this.transform.position.x, 3, -6.2f);
             //Vector3 camVelocity = new Vector3(targCamPos.x - cameraTransform.position.x - 3, 0, 0);
             cameraRef.transform.position = Vector3.Lerp(cameraRef.transform.position, targCamPos, cameraSpeed * Time.deltaTime);//Vector3.SmoothDamp(cameraTransform.position, targCamPos, ref camVelocity, 0.3f);
         }
@@ -283,14 +283,14 @@ public class BaseCharacterController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer/ time), Mathf.Lerp(0.3f, -10, timer/ time)), Quaternion.identity);
+            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer/ time), Mathf.Lerp(0.3f, -6.2f, timer/ time)), Quaternion.identity);
 
             await System.Threading.Tasks.Task.Yield();
         }
 
         controlsDDisabled = false;
 
-        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -10), Quaternion.identity);
+        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -6.2f), Quaternion.identity);
     }
 
     public async void Attack()
@@ -380,10 +380,13 @@ public class BaseCharacterController : MonoBehaviour
                 switch (col.GetComponent<Pickup>().pickupType)
                 {
                     case PickupType.SAUSAGEROLL:
-                        hunger += 30 * ((6 - (float)col.GetComponent<Pickup>().sausageState)/ 6);
+                        float hungerMultiplier = ((7 - (float)col.GetComponent<Pickup>().sausageState) / 7);
+                        hunger += 30 * hungerMultiplier;
+                        hunger = Mathf.Clamp(hunger, 0, hungerMax);
+                        GameManager.instance.AddScore(PointsType.EatSausageRoll, hungerMultiplier);
                         break;
                     case PickupType.WRAPPER:
-                        
+                        GameManager.instance.AddScore(PointsType.WrapperPickup);
                         break;
                     default:
                         break;

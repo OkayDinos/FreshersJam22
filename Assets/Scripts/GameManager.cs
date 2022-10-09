@@ -74,8 +74,8 @@ public class GameManager : MonoBehaviour
         switch (pointsType)
         {
             case PointsType.NormalAttack:
-                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
-                boomColour = new Color(0, 255, 0, 1);
+                do { textSelector = Random.Range(0, 5); } while (textSelector == lastTextRandomiser);
+                boomColour = new Color32(0, 255, 0, 255);
                 scoreToAdd = 1000;
                 switch (textSelector)
                 {
@@ -100,16 +100,16 @@ public class GameManager : MonoBehaviour
             case PointsType.FourForThree:
                 boomText = "4 For 3";
                 scoreToAdd = 1500;
-                boomColour = new Color(255, 200, 0, 1);
+                boomColour = new Color32(255, 200, 0, 255);
                 break;
             case PointsType.Uppercut:
                 boomText = "Uppercut!";
                 scoreToAdd = 2000;
-                boomColour = new Color(255, 200, 0, 1);
+                boomColour = new Color32(255, 200, 0, 255);
                 break;
             case PointsType.EatSausageRoll:
-                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
-                boomColour = new Color(200, 120, 0, 1);
+                do { textSelector = Random.Range(0, 5); } while (textSelector == lastTextRandomiser);
+                boomColour = new Color32(242, 157, 15, 255);
                 scoreToAdd = Mathf.RoundToInt(250 * pointsMultiplier);
                 switch (textSelector)
                 {
@@ -131,31 +131,31 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case PointsType.WrapperPickup:
-                do { textSelector = Random.Range(0, 4); } while (textSelector == lastTextRandomiser);
-                boomColour = new Color(220, 220, 220, 1);
+                do { textSelector = Random.Range(0, 5); } while (textSelector == lastTextRandomiser);
+                boomColour = new Color32(220, 220, 220, 255);
                 scoreToAdd = 50;
                 switch (textSelector)
                 {
                     case 0:
-                        boomText = "x";
+                        boomText = "Good Citizen";
                         break;
                     case 1:
-                        boomText = "x";
+                        boomText = "Litter Pecker!";
                         break;
                     case 2:
-                        boomText = "x";
+                        boomText = "City Cleanup";
                         break;
                     case 3:
-                        boomText = "x";
+                        boomText = "Trash Trashed!";
                         break;
                     case 4:
-                        boomText = "x";
+                        boomText = "+ Used Sausage Wrapper";
                         break;
                 }
                 break;
             default:
                 boomText = "";
-                boomColour = new Color(0, 0, 0, 0);
+                boomColour = new Color32(0, 0, 0, 0);
                 break;
         }
 
@@ -163,7 +163,8 @@ public class GameManager : MonoBehaviour
 
         score += scoreToAdd;
         MainScoreText.SetText(score.ToString("0000"));
-        boomText += $"\n<size=60%>+{scoreToAdd.ToString("0000")}";
+        
+        boomText += scoreToAdd >= 0 ? $"\n<size=60%>+{scoreToAdd.ToString()}" : $"\n<size=60%>-{scoreToAdd.ToString()}";
         scoreAdditionText.color = boomColour;
         Color boomColourTransparent = new Color(boomColour.r, boomColour.g, boomColour.b, 0);
         Color boomColourEchoStarter = new Color(boomColour.r, boomColour.g, boomColour.b, 0.5f);
