@@ -7,10 +7,17 @@ public enum AIState { IDLE, WALKING, ATTACKING, INJURED, RUNNINGAWAY }
 
 public enum EnemySprites { IDLE = 0, WALKING1 = 1, WALKING2 = 2, RUNNING1 = 3, RUNNING2 = 4, SHOO1 = 5, SHOO2 = 6, ATTACKING1 = 7, ATTACKING2 = 8 }
 
+public enum EnemyAtkType { SHOO, ATTACK }
+
 public class EnemyController : MonoBehaviour
 {
     List<Task> tasks = new List<Task>();
     AIState currentState;
+
+    float atkCD;
+
+    float atkDuration;
+    float atkPreDuration;
 
     EnemySprites currentSprite;
 
@@ -65,6 +72,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        atkCD = Random.Range(1f, 5f);
         activeSprites = grandmaSprites;
 
         if (Random.value < 0.5f)
@@ -74,7 +82,7 @@ public class EnemyController : MonoBehaviour
 
         stepCD = 0.2f;
 
-        foodValue = 100;
+        foodValue = 100 + Random.Range(0f,20f);
 
         startedEating = false;
 
@@ -105,11 +113,21 @@ public class EnemyController : MonoBehaviour
                     StartWalk();
                 }
                 EatStuff();
+                atkCD -= Time.deltaTime;
+                if(atkCD < 0 && Mathf.Abs(transform.position.x - WorldManager.singleton.playerRef.transform.position.x) < 3)
+                {
+                    atkDuration = 0.1f;
+                    atkPreDuration = 0.5f;
+                    currentState = AIState.ATTACKING;
+                    SetSprite(EnemySprites.SHOO1);
+                    atkCD = 4;
+                }
                 break;
             case AIState.WALKING:
                 transform.position = new Vector3(transform.position.x + (Time.deltaTime * walkVel), transform.position.y, transform.position.z);
                 walkLength -= Time.deltaTime;
 
+                atkCD -= Time.deltaTime;
                 stepCD -= Time.deltaTime;
                 if (stepCD < 0)
                 {
@@ -132,7 +150,32 @@ public class EnemyController : MonoBehaviour
                 EatStuff();
                 break;
             case AIState.ATTACKING:
+                float dir = 1;
+                if (flipped)
+                {
+                    dir = -1;
+                }
+                atkPreDuration -= Time.deltaTime;
+                if (atkPreDuration < 0)
+                {
+                    SetSprite(EnemySprites.SHOO2);
+                    atkDuration -= Time.deltaTime;
 
+                    Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(0.5f * dir, 0, 0), new Vector3(1, 1, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+
+                    foreach (Collider col in hit)
+                    {
+                        if (col.tag == "Player")
+                        {
+                            col.GetComponent<BaseCharacterController>().TakeDamage(transform.position, EnemyAtkType.SHOO); // second argument is damage
+                        }
+                    }
+
+                    if (atkDuration < 0)
+                    {
+                        currentState = AIState.IDLE;
+                    }
+                }
                 break;
             case AIState.INJURED:
                 stunTime -= Time.deltaTime;
@@ -252,7 +295,7 @@ public class EnemyController : MonoBehaviour
 
     async Task DamageReaction(float _strength, int _direction)
     {
-        float time = 0.5f;
+        float time = 0.5f * (_strength / 25);
 
         float timer = 0;
 
@@ -266,7 +309,7 @@ public class EnemyController : MonoBehaviour
 
             spriteRenderer.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
 
-            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4, 0, timer / time)), transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4 * (_strength / 25), 0, timer / time)), transform.position.y, transform.position.z);
 
             await System.Threading.Tasks.Task.Yield();
         }

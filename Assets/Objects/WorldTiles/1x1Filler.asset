@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2afd6773de947ea45aaa82d60e834619, type: 3}
-  m_Name: 1x2V&A
+  m_Name: 1x1Filler
   m_EditorClassIdentifier: 
-  prefabTile: {fileID: 8130441574752588865, guid: d0630a59a28f56944b25075249789ed3, type: 3}
-  tileLength: 3
+  prefabTile: {fileID: 9178839559812713951, guid: b81993bb297e128409c95ef5ffa8afba, type: 3}
+  tileLength: 1
