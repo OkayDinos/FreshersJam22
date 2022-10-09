@@ -185,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toDelete: 0
   healthBar: {fileID: 4313144496262411518}
+  pickupDrop: {fileID: 4323958435515257169, guid: f1f7db27d8fcea24bb2bd9c4f0f58c18, type: 3}
 --- !u!65 &4333036875073793244
 BoxCollider:
   m_ObjectHideFlags: 0

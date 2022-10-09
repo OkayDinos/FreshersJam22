@@ -25,6 +25,8 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] GameObject healthBar;
 
+    [SerializeField] GameObject pickupDrop;
+
     // Start is called before the first frame update
 
     void Awake()
@@ -140,6 +142,8 @@ public class EnemyController : MonoBehaviour
 
     async void Runaway(int _direction)
     {
+        Drops();
+
         float time = 1.5f;
 
         float timer = 0;
@@ -178,5 +182,12 @@ public class EnemyController : MonoBehaviour
         }
 
         transform.localScale = new Vector3(1,2,1);
+    }
+
+    void Drops()
+    {
+        GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
+
+        drop.GetComponent<Pickup>().OnDropped();
     }
 }

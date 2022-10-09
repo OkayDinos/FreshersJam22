@@ -63,6 +63,9 @@ public class BaseCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Check for pickups
+        CheckPickup();
+
         // Attack input function
         if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled)
         {
@@ -304,5 +307,18 @@ public class BaseCharacterController : MonoBehaviour
         GetComponent<SpriteRenderer>().color = Color.white;
 
         attackActive = false;
+    }
+
+    void CheckPickup()
+    {
+        Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+
+            foreach (Collider col in hit)
+            {
+                if (col.tag == "Pickup")
+                {
+                    col.GetComponent<Pickup>().OnPickedUp();
+                }
+            }
     }
 }
