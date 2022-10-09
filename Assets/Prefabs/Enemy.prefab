@@ -304,7 +304,7 @@ MonoBehaviour:
   healthBar: {fileID: 4313144496262411518}
   eatBar: {fileID: 489924235571731519}
   pickupDrop: {fileID: 4323958435515257169, guid: f1f7db27d8fcea24bb2bd9c4f0f58c18, type: 3}
-  sprite: {fileID: 228603771945826767}
+  spriteRenderer: {fileID: 2494661490898715697}
   grandmaSprites:
   - {fileID: -1748284450, guid: c20b11c2ca68da94ba159801601addd6, type: 3}
   - {fileID: 91810977, guid: c20b11c2ca68da94ba159801601addd6, type: 3}
@@ -316,15 +316,15 @@ MonoBehaviour:
   - {fileID: 2097620597, guid: c20b11c2ca68da94ba159801601addd6, type: 3}
   - {fileID: 229645253, guid: c20b11c2ca68da94ba159801601addd6, type: 3}
   grandpaSprites:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: -1748284450, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: 91810977, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: 1446546147, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: -2121259648, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: 1480607994, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: -1601120955, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: -847292102, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: 2097620597, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
+  - {fileID: 229645253, guid: 4b2ff9f76cb75724ea503e4009c83c59, type: 3}
 --- !u!65 &4333036875073793244
 BoxCollider:
   m_ObjectHideFlags: 0

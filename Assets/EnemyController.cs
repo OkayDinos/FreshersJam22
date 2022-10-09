@@ -4,9 +4,15 @@ using UnityEngine;
 
 public enum AIState { IDLE, WALKING, ATTACKING, INJURED, RUNNINGAWAY }
 
+public enum EnemySprites { IDLE = 0, WALKING1 = 1, WALKING2 = 2, RUNNING1 = 3, RUNNING2 = 4, SHOO1 = 5, SHOO2 = 6, ATTACKING1 = 7, ATTACKING2 = 8 }
+
 public class EnemyController : MonoBehaviour
 {
     AIState currentState;
+
+    EnemySprites currentSprite;
+
+    float stepCD;
 
     float walkCD;
     float walkLength;
@@ -33,10 +39,12 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] GameObject pickupDrop;
 
-    [SerializeField] GameObject sprite;
+    [SerializeField] SpriteRenderer spriteRenderer;
 
     [SerializeField] List<Sprite> grandmaSprites = new List<Sprite>();
     [SerializeField] List<Sprite> grandpaSprites = new List<Sprite>();
+
+    List<Sprite> activeSprites = new List<Sprite>();
 
     // Start is called before the first frame update
 
@@ -44,8 +52,18 @@ public class EnemyController : MonoBehaviour
     {
         toDelete = false;
     }
+
     void Start()
     {
+        activeSprites = grandmaSprites;
+
+        if (Random.value < 0.5f)
+        {
+            activeSprites = grandpaSprites;
+        }
+
+        stepCD = 0.2f;
+
         foodValue = 100;
 
         startedEating = false;
@@ -55,6 +73,8 @@ public class EnemyController : MonoBehaviour
         walkCD = Random.value * 5;
 
         flipped = (Random.value > 0.5f);
+
+        SetSprite(EnemySprites.IDLE);
     }
 
     // Update is called once per frame
@@ -64,8 +84,11 @@ public class EnemyController : MonoBehaviour
         {
             case AIState.IDLE:
                 walkCD -= Time.deltaTime;
+                SetSprite(EnemySprites.IDLE);
                 if (walkCD < 0)
                 {
+                    SetSprite(EnemySprites.WALKING1);
+                    ChangeDirection(0);
                     StartWalk();
                 }
                 EatStuff();
@@ -73,6 +96,21 @@ public class EnemyController : MonoBehaviour
             case AIState.WALKING:
                 transform.position = new Vector3(transform.position.x + (Time.deltaTime * walkVel), transform.position.y, transform.position.z);
                 walkLength -= Time.deltaTime;
+
+                stepCD -= Time.deltaTime;
+                if (stepCD < 0)
+                {
+                    if (currentSprite == EnemySprites.WALKING1)
+                    {
+                        SetSprite(EnemySprites.WALKING2);
+                    }
+                    else
+                    {
+                        SetSprite(EnemySprites.WALKING1);
+                    }
+                    stepCD += 0.2f;
+                }
+
                 if (walkLength < 0)
                 {
                     currentState = AIState.IDLE;
@@ -87,11 +125,24 @@ public class EnemyController : MonoBehaviour
                 stunTime -= Time.deltaTime;
                 if (stunTime < 0)
                 {
+                    ChangeDirection(dmgDir);
                     StartWalk(dmgDir);
                 }
                 break;
             case AIState.RUNNINGAWAY:
-
+                stepCD -= Time.deltaTime;
+                if (stepCD < 0)
+                {
+                    if (currentSprite == EnemySprites.RUNNING1)
+                    {
+                        SetSprite(EnemySprites.RUNNING2);
+                    }
+                    else
+                    {
+                        SetSprite(EnemySprites.RUNNING1);
+                    }
+                    stepCD += 0.2f;
+                }
                 break;
             default:
                 break;
@@ -99,16 +150,7 @@ public class EnemyController : MonoBehaviour
     }
 
     void StartWalk(float _direction = 0)
-    {
-        if (_direction == 0)
-        {
-            flipped = (Random.value > 0.5f);
-        }
-        else
-        {
-            flipped = (_direction < 0);
-        }
-        
+    {   
         currentState = AIState.WALKING;
         walkLength = 3 + (Random.value * 3);
 
@@ -140,6 +182,8 @@ public class EnemyController : MonoBehaviour
             dmgDir = 1;
         }
 
+        ChangeDirection(dmgDir);
+
         DamageReaction(_dmg, dmgDir);
 
         healthBar.transform.localScale = new Vector3(1-(angerValue / 100), 0.06f, 1);
@@ -149,14 +193,18 @@ public class EnemyController : MonoBehaviour
             stunTime = 0.2f;
 
             currentState = AIState.INJURED;
+
+            SetSprite(EnemySprites.IDLE);
         }
         else
         {
+            ChangeDirection(dmgDir);
             Runaway(dmgDir);
             currentState = AIState.RUNNINGAWAY;
 
-            GameManager.instance.AddScore(attackType);
+            SetSprite(EnemySprites.RUNNING1);
 
+            GameManager.instance.AddScore(attackType);
         }
     }
 
@@ -198,7 +246,7 @@ public class EnemyController : MonoBehaviour
 
             transform.localScale = new Vector3(scale, scale * 2, scale);
 
-            sprite.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
+            spriteRenderer.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4, 0, timer / time)), transform.position.y, transform.position.z);
 
@@ -251,8 +299,38 @@ public class EnemyController : MonoBehaviour
                 }
 
                 Runaway(runawayDir);
+                ChangeDirection(runawayDir);
                 currentState = AIState.RUNNINGAWAY;
             }
+        }
+    }
+
+    void SetSprite(EnemySprites _sprite)
+    {
+        spriteRenderer.sprite = activeSprites[(int)_sprite];
+        currentSprite = _sprite;
+    }
+
+    void ChangeDirection(int _direction = 0)
+    {
+        if (_direction == 0)
+        {
+            _direction = 1;
+            if (Random.value > 0.5f)
+            {
+                _direction = -1;
+            }
+        }
+
+        if (_direction == 1)
+        {
+            spriteRenderer.flipX = true;
+            flipped = false;
+        }
+        else if (_direction == -1)
+        {
+            spriteRenderer.flipX = false;
+            flipped = true;
         }
     }
 }
