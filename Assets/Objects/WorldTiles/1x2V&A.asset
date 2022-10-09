@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: 1x2V&A
   m_EditorClassIdentifier: 
   prefabTile: {fileID: 8130441574752588865, guid: d0630a59a28f56944b25075249789ed3, type: 3}
-  tileLength: 2
+  tileLength: 3
