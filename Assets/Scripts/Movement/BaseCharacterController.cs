@@ -53,6 +53,9 @@ public class BaseCharacterController : MonoBehaviour
 
     [SerializeField] GameObject hungerBar; // Health bar prefab
 
+    [SerializeField] GameObject splat;
+    [SerializeField] GameObject cloud;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -441,18 +444,104 @@ public class BaseCharacterController : MonoBehaviour
 
     public void TakeDamage(Vector3 _enemyPos, EnemyAtkType _attackType)
     {
-        int dir = 0;
-        if (_enemyPos.x > transform.position.x)
+        if (_attackType == EnemyAtkType.SHOO)
         {
-            dir = -1;
-            flipped = true;
+            int dir = 0;
+            if (_enemyPos.x > transform.position.x)
+            {
+                dir = -1;
+                flipped = true;
+            }
+            else
+            {
+                dir = 1;
+                flipped = false;
+            }
+            DamageReaction(dir);
         }
         else
         {
-            dir = 1;
-            flipped = false;
+            Splat();
         }
-        DamageReaction(dir);
+    }
+
+    async void Splat()
+    {
+        controlsDDisabled = true;
+
+        playerSprite.enabled = false;
+
+        Vector3 originalPos = transform.position;
+
+        transform.position += new Vector3( 0, -100, 0);
+
+        float time = 0.2f;
+
+        float timer = 0;
+
+        GameObject splatObject = Instantiate(splat, transform.position, Quaternion.identity);
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            splatObject.transform.position = Vector3.Lerp(originalPos, cameraRef.transform.position + new Vector3(0, -1, 1), timer / time);
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        splatObject.transform.position = cameraRef.transform.position + new Vector3(0, -1, 1);
+
+        time = 0.4f;
+
+        timer = 0;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        time = 0.8f;
+
+        timer = 0;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            splatObject.transform.position = Vector3.Lerp(cameraRef.transform.position + new Vector3(0, -1, 1), cameraRef.transform.position + new Vector3(0, -4, 1), timer / time);
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        Destroy(splatObject);
+
+        playerSprite.enabled = true;
+
+        GameObject cloudObject = Instantiate(cloud, transform.position, Quaternion.identity);
+
+        time = 0.8f;
+
+        timer = 0;
+
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+
+            transform.position = Vector3.Lerp(originalPos + new Vector3(0, 10, 0), originalPos + new Vector3(0, 5, 0), timer / time);
+
+            cloudObject.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+
+            await System.Threading.Tasks.Task.Yield();
+        }
+
+        transform.position = originalPos + new Vector3(0, 5, 0);
+
+        Destroy(cloudObject);
+
+        controlsDDisabled = false;
     }
 
     async void DamageReaction(int _direction)
