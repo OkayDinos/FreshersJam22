@@ -55,6 +55,14 @@ public class EnemyController : MonoBehaviour
         toDelete = false;
     }
 
+    void OnDestroy()
+    {
+        foreach (Task task in tasks)
+        {
+            task.Dispose();
+        }
+    }
+
     void Start()
     {
         activeSprites = grandmaSprites;
@@ -186,7 +194,7 @@ public class EnemyController : MonoBehaviour
 
         ChangeDirection(dmgDir);
 
-        DamageReaction(_dmg, dmgDir);
+        tasks.Add(DamageReaction(_dmg, dmgDir));
 
         healthBar.transform.localScale = new Vector3(1-(angerValue / 100), 0.06f, 1);
 
@@ -239,7 +247,7 @@ public class EnemyController : MonoBehaviour
         toDelete = true;
     }
 
-    async void DamageReaction(float _strength, int _direction)
+    async Task DamageReaction(float _strength, int _direction)
     {
         float time = 0.5f;
 

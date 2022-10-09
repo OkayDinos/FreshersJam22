@@ -20,6 +20,8 @@ public class WorldManager : MonoBehaviour
 
     public static WorldManager singleton;
 
+    List<int> duplicateList = new List<int>();
+
     void Awake()
     {
         if (singleton == null)
@@ -46,13 +48,26 @@ public class WorldManager : MonoBehaviour
     {
         worldSize = 0;
 
-        int targetWorldSize = 100;
+        int targetWorldSize = 20;
         
         Vector3 nextTileSpawnPos = new Vector3(0, 0, 0);
 
         while (targetWorldSize > worldSize)
         {
             int random = Random.Range(0, prefabTilesList.Count);
+
+            while (duplicateList.Contains(random))
+            {
+                random = Random.Range(0, prefabTilesList.Count);
+            }
+
+            duplicateList.Add(random);
+
+            if (duplicateList.Count > 4)
+            {
+                duplicateList.RemoveAt(0);
+            }
+            
             Vector3 currentTileSpawnPos = nextTileSpawnPos + new Vector3(((prefabTilesList[random].tileLength - 1) * 10) / 2, 0, 4f);
 
             Quaternion currentTileSpawnRot = Quaternion.identity;

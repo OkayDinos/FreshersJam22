@@ -897,8 +897,8 @@ MeshRenderer:
   - {fileID: -719806975172374025, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
   - {fileID: 6110099749992461272, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
   - {fileID: 5032935180535543827, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
-  - {fileID: -783888717807608253, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
-  - {fileID: -6314549146108242199, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
+  - {fileID: 2100000, guid: 912cd5b15609737438c7a80b99299f26, type: 2}
+  - {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
   - {fileID: -8441250269488092414, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
   - {fileID: -6708218438343780068, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
   - {fileID: -4953923742398711515, guid: 86a6a102cff00524d9e9a1dfcbbfb64e, type: 3}
