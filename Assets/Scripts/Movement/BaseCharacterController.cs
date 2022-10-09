@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Media;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,6 +36,8 @@ public class BaseCharacterController : MonoBehaviour
     bool usedFlap, flapActive; // true if player has flapped this jump | if space let go mid air then allow flap
     public float cameraSpeed; // Speed of the cmera moving 
     Vector3 colliderCenter; // Centerpoint of the collider 
+    AudioSource playerAudio; // Audio source component
+    public List<AudioClip> audioClips = new List<AudioClip> (); 
 
     //float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
     public Camera cameraRef;
@@ -74,6 +78,7 @@ public class BaseCharacterController : MonoBehaviour
         //transform = GetComponent<Transform>();
         playerCollider = GetComponent<BoxCollider>();
         playerSprite = GetComponent<SpriteRenderer>();
+        playerAudio = GetComponent<AudioSource>();
         moveAction.Enable();
         jumpAction.Enable();
         attackAction.Enable();
@@ -156,6 +161,9 @@ public class BaseCharacterController : MonoBehaviour
             if (!IsGrounded())
             {
                 usedFlap = true;
+                int flapNoise = Random.Range(1, 5);
+                playerAudio.clip = audioClips[flapNoise];
+                playerAudio.Play();
                 playerSprite.sprite = animationSprites[6]; //if flapped change sprite to flapped sprite
             }
             kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, jumpVelocity, kevinRigidbody.velocity.z);
@@ -397,7 +405,7 @@ public class BaseCharacterController : MonoBehaviour
         attackActive = false;
     }
 
-    void CheckPickup()
+    async void CheckPickup()
     {
         Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
 
@@ -408,19 +416,26 @@ public class BaseCharacterController : MonoBehaviour
                 switch (col.GetComponent<Pickup>().pickupType)
                 {
                     case PickupType.SAUSAGEROLL:
+
+                        playerAudio.clip = audioClips[7];
+                        playerAudio.Play();
                         float hungerMultiplier = ((7 - (float)col.GetComponent<Pickup>().sausageState) / 7);
                         hunger += 30 * hungerMultiplier;
                         hunger = Mathf.Clamp(hunger, 0, hungerMax);
                         GameManager.instance.AddScore(PointsType.EatSausageRoll, hungerMultiplier);
-                        break;
+                        float time = 0.5f, timer = 0;
+                        col.GetComponent<Pickup>().OnPickedUp();
+                        while (timer < time) { timer += Time.deltaTime;  playerSprite.sprite = animationSprites[8]; await System.Threading.Tasks.Task.Yield(); }
+                            break;
                     case PickupType.WRAPPER:
                         GameManager.instance.AddScore(PointsType.WrapperPickup);
+                        col.GetComponent<Pickup>().OnPickedUp();
                         break;
                     default:
                         break;
                 }
 
-                col.GetComponent<Pickup>().OnPickedUp();
+                
             }
         }
     }
@@ -546,6 +561,8 @@ public class BaseCharacterController : MonoBehaviour
 
     async void DamageReaction(int _direction)
     {
+        playerAudio.clip = audioClips[6];
+        playerAudio.Play();
         controlsDDisabled = true;
 
         float time = 0.4f;

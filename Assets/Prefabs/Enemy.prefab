@@ -301,6 +301,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toDelete: 0
+  grandadShoo: {fileID: 8300000, guid: 1b1fc3c44f18d364aa8c4b496754fcc6, type: 3}
+  grannyShoo: {fileID: 8300000, guid: 2351e5fe921eaec449432a2512ad7957, type: 3}
+  dieNormal: {fileID: 8300000, guid: 2a984a9aa5fe7404aa830b72c6d1a6c2, type: 3}
+  dieCombo: {fileID: 8300000, guid: a05990e9eac25c945bf60a83605dbf88, type: 3}
   healthBar: {fileID: 4313144496262411518}
   eatBar: {fileID: 489924235571731519}
   pickupDrop: {fileID: 4323958435515257169, guid: f1f7db27d8fcea24bb2bd9c4f0f58c18, type: 3}

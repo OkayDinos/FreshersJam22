@@ -42,6 +42,11 @@ public class EnemyController : MonoBehaviour
 
     bool startedEating;
 
+    bool isGrandma;
+
+    AudioSource playerAudioSource;
+    public AudioClip grandadShoo, grannyShoo, dieNormal, dieCombo;
+
     [SerializeField] GameObject healthBar;
 
     [SerializeField] GameObject eatBar;
@@ -60,6 +65,7 @@ public class EnemyController : MonoBehaviour
     void Awake()
     {
         toDelete = false;
+        playerAudioSource = GameObject.Find("Character").GetComponent<AudioSource>();
     }
 
     void OnDestroy()
@@ -74,10 +80,11 @@ public class EnemyController : MonoBehaviour
     {
         atkCD = Random.Range(1f, 5f);
         activeSprites = grandmaSprites;
-
+        isGrandma = true;
         if (Random.value < 0.5f)
         {
             activeSprites = grandpaSprites;
+            isGrandma = false;
         }
 
         stepCD = 0.2f;
@@ -174,6 +181,15 @@ public class EnemyController : MonoBehaviour
                         if (col.tag == "Player")
                         {
                             col.GetComponent<BaseCharacterController>().TakeDamage(transform.position, EnemyAtkType.SHOO); // second argument is damage
+                            if (isGrandma)
+                            {
+                                playerAudioSource.clip = grannyShoo;
+                                playerAudioSource.Play();
+                            }
+                            else {
+                                playerAudioSource.clip = grandadShoo;
+                                playerAudioSource.Play();
+                            }
                         }
                     }
 
@@ -295,6 +311,15 @@ public class EnemyController : MonoBehaviour
 
             SetSprite(EnemySprites.RUNNING1);
 
+            if (attackType == PointsType.NormalAttack)
+            {
+                playerAudioSource.clip = dieNormal;
+                playerAudioSource.Play();
+            }
+            else {
+                playerAudioSource.clip = dieCombo;
+                playerAudioSource.Play();
+            }
             GameManager.instance.AddScore(attackType);
         }
     }
