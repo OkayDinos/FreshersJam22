@@ -33,6 +33,11 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] GameObject pickupDrop;
 
+    [SerializeField] GameObject sprite;
+
+    [SerializeField] List<Sprite> grandmaSprites = new List<Sprite>();
+    [SerializeField] List<Sprite> grandpaSprites = new List<Sprite>();
+
     // Start is called before the first frame update
 
     void Awake()
@@ -193,7 +198,7 @@ public class EnemyController : MonoBehaviour
 
             transform.localScale = new Vector3(scale, scale * 2, scale);
 
-            GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
+            sprite.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4, 0, timer / time)), transform.position.y, transform.position.z);
 
