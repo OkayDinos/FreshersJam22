@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public enum AIState { IDLE, WALKING, ATTACKING, INJURED, RUNNINGAWAY }
 
@@ -8,6 +9,7 @@ public enum EnemySprites { IDLE = 0, WALKING1 = 1, WALKING2 = 2, RUNNING1 = 3, R
 
 public class EnemyController : MonoBehaviour
 {
+    List<Task> tasks = new List<Task>();
     AIState currentState;
 
     EnemySprites currentSprite;
@@ -51,6 +53,14 @@ public class EnemyController : MonoBehaviour
     void Awake()
     {
         toDelete = false;
+    }
+
+    void OnDestroy()
+    {
+        foreach (Task task in tasks)
+        {
+            task.Dispose();
+        }
     }
 
     void Start()
@@ -184,7 +194,7 @@ public class EnemyController : MonoBehaviour
 
         ChangeDirection(dmgDir);
 
-        DamageReaction(_dmg, dmgDir);
+        tasks.Add(DamageReaction(_dmg, dmgDir));
 
         healthBar.transform.localScale = new Vector3(1-(angerValue / 100), 0.06f, 1);
 
@@ -208,7 +218,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    async void Runaway(int _direction)
+    void Runaway(int _direction)
+    {
+        tasks.Add(RunawayTask(_direction));
+    }
+
+    async Task RunawayTask(int _direction)
     {
         Drops();
 
@@ -232,7 +247,7 @@ public class EnemyController : MonoBehaviour
         toDelete = true;
     }
 
-    async void DamageReaction(float _strength, int _direction)
+    async Task DamageReaction(float _strength, int _direction)
     {
         float time = 0.5f;
 
