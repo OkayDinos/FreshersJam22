@@ -72,7 +72,7 @@ public class WorldManager : MonoBehaviour
 
             Quaternion currentTileSpawnRot = Quaternion.identity;
 
-            if (!(random == 2))
+            if (!(random == 2) )
             {
                 currentTileSpawnRot = Quaternion.Euler(0, 180, 0);
             }
