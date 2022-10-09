@@ -2342,10 +2342,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7911140063326250974, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
+    - target: {fileID: -7911140063326250974, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[5]
+      value: 
+      objectReference: {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
+    - target: {fileID: -3195828791156449804, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 912cd5b15609737438c7a80b99299f26, type: 2}
     - target: {fileID: 919132149155446097, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
       propertyPath: m_Name
       value: Trainstation(test)
       objectReference: {fileID: 0}
+    - target: {fileID: 3532230278835553379, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
+    - target: {fileID: 6831370760333580474, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 912cd5b15609737438c7a80b99299f26, type: 2}
+    - target: {fileID: 8845140539303999130, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
+    - target: {fileID: 8845140539303999130, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: dbe38f8d73321334c83b02a5594ddcdf, type: 2}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: c1c9a05ebcb51384aa28556076942e8f, type: 3}
