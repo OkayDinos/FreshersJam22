@@ -313,6 +313,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: KevinGlide
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f651e0b0da87a34bb9c234e2d9e13ad
+      internalID: 2043980550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KevinFlapAndShoo
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e2a8b8dcc2454148a72276b2f6fe819
+      internalID: -1922760340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KevinEat
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 512
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d000b97f51ec4fc4dab14d70f3145806
+      internalID: 1308662930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -325,11 +388,14 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       KevinIdle02: 1872673030
+      KevinFlapAndShoo: -1922760340
       KevinWalk02: 110518382
+      KevinGlide: 2043980550
       Kevin_8: -223504083
       KevinIdle01: -195707425
       KevinWalk01: -1984034968
       KevinKick: 1642843487
+      KevinEat: 1308662930
       Kevin_7: 213039645
       KevinPunch: 1961713527
       KevinSplat: 1033035727
