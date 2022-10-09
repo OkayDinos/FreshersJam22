@@ -420,7 +420,7 @@ public class BaseCharacterController : MonoBehaviour
                         playerAudio.clip = audioClips[7];
                         playerAudio.Play();
                         float hungerMultiplier = ((7 - (float)col.GetComponent<Pickup>().sausageState) / 7);
-                        hunger += 30 * hungerMultiplier;
+                        hunger += 12 * hungerMultiplier;
                         hunger = Mathf.Clamp(hunger, 0, hungerMax);
                         GameManager.instance.AddScore(PointsType.EatSausageRoll, hungerMultiplier);
                         float time = 0.5f, timer = 0;
@@ -442,9 +442,9 @@ public class BaseCharacterController : MonoBehaviour
 
     void GetHungry()
     {
-        timeAlive += Time.deltaTime;
+        timeAlive += Time.deltaTime * 1.5f;
 
-        hunger -= timeAlive * 0.0006f;
+        hunger -= timeAlive * (0.018f * Time.deltaTime);
 
         hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
 
@@ -541,6 +541,8 @@ public class BaseCharacterController : MonoBehaviour
 
         timer = 0;
 
+        kevinRigidbody.velocity = Vector3.zero;
+
         while (timer < time)
         {
             timer += Time.deltaTime;
@@ -553,6 +555,8 @@ public class BaseCharacterController : MonoBehaviour
         }
 
         transform.position = originalPos + new Vector3(0, 5, 0);
+
+        kevinRigidbody.velocity = Vector3.zero;
 
         Destroy(cloudObject);
 

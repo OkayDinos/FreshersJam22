@@ -68,7 +68,7 @@ public class EnemyManager : MonoBehaviour
 
         if (timer <= 0)
         {
-            timer = 5;
+            timer = 20;
 
             SpawnEnemies(worldManager.playerRef.transform.position, 1);
         }
