@@ -3,11 +3,14 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.EventSystems;
 
 public class Scoreboard : MonoBehaviour
 {
-    public Button _leaderboardButton;
+    public Button _leaderboardButton, _mainMenuButton;
+    public List<GameObject> hideObjects = new List<GameObject>();
     public string _leaderboardCommaSeperated;
     public string[] splitArray;
     public GameObject m_PanelLeaderboard;
@@ -16,6 +19,9 @@ public class Scoreboard : MonoBehaviour
 
     public void ShowLeaderboard()
     {
+
+
+
         _leaderboardButton.interactable = false;
         _leaderboardButton.GetComponentInChildren<TextMeshProUGUI>().SetText("Fetching...");
         StartCoroutine(DoRetrieveScores());
@@ -43,6 +49,14 @@ public class Scoreboard : MonoBehaviour
             else
             {
                 m_PanelLeaderboard.SetActive(true);
+
+                foreach (GameObject item in hideObjects)
+                {
+                    item.SetActive(false);
+                }
+
+                _mainMenuButton.Select();
+
                 _leaderboardCommaSeperated = www.downloadHandler.text;
                 SplitMe();
                 yield return null;

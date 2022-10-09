@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &770998625324648919
 SpriteRenderer:
@@ -214,7 +214,7 @@ MonoBehaviour:
     m_Name: Attack
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 98b7e03b-6894-4930-a49d-1d2a365091dd
+    m_Id: 63baac6b-8fad-4de3-8971-8037212c8b17
     m_Processors: 
     m_Interactions: Press
     m_SingletonActionBindings:
@@ -233,6 +233,39 @@ MonoBehaviour:
       m_Processors: 
       m_Groups: 
       m_Action: Attack
+      m_Flags: 0
+    m_Flags: 0
+  pauseAction:
+    m_Name: Pause
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 49fee91a-6bcb-422b-83ca-e024aeedee26
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: fdf368f5-2321-414c-9661-a549c7037ab8
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 11651a2e-4e81-4c97-8c13-b2d4a79fe29a
+      m_Path: <Gamepad>/start
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause
+      m_Flags: 0
+    - m_Name: 
+      m_Id: e2eaa77c-68d4-4e36-babd-1fdf1dcfab05
+      m_Path: <Keyboard>/p
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause
       m_Flags: 0
     m_Flags: 0
   velocity: {x: 0, y: 0, z: 0}

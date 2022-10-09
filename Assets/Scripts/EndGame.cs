@@ -12,12 +12,14 @@ public class EndGame : MonoBehaviour
     int _finalScore;
     public GameObject _scoreTextGO;
     public TMP_InputField _usernameInpF;
-    public Button _submitButton;
+    public Button _submitButton, _ViewButton;
+
 
     void Start()
     {
         //* Get Score
-        _finalScore = 0;
+        _finalScore = GameManager.instance.score;
+        _usernameInpF.Select();
 
 
         _scoreTextGO.GetComponent<TextMeshProUGUI>().SetText($"You Scored:\n{_finalScore}");
@@ -46,6 +48,7 @@ public class EndGame : MonoBehaviour
         _usernameInpF.interactable = false;
         _submitButton.GetComponentInChildren<TextMeshProUGUI>().SetText("Submitting...");
         StartCoroutine(DoPostScores(_usernameInpF.text, _finalScore));
+
     }
 
     public void DoExitToMainMenu()
@@ -74,5 +77,7 @@ public class EndGame : MonoBehaviour
                 _submitButton.GetComponentInChildren<TextMeshProUGUI>().SetText("Submited");
             }
         }
+
+        _ViewButton.Select();
     }
 }

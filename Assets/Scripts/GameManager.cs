@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI MainScoreText, scoreAdditionText, scoreAdditionTextEcho;
     public RectTransform scoreAdditionTransform, scoreAdditionTransformEcho;
 
-    float score;
+    public int score;
 
     public GameState currentGameState = GameState.Playing;
+
+    public GameObject endGamePanel;
     
     // Start is called before the first frame update
     void Start()
@@ -44,10 +46,28 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void DoPauseGame()
+    public void DoPauseGame()
+
+
     {
-        currentGameState = GameState.Paused;
-        PauseMenu.instance.gameObject.SetActive(true);
+
+        Debug.Log("rrerererer");
+        switch (currentGameState)
+        {
+            case GameState.Playing:
+                currentGameState = GameState.Paused;
+                PauseMenu.instance.gameObject.SetActive(true);
+                break;
+            case GameState.Paused:
+                currentGameState = GameState.Playing;
+                PauseMenu.instance.gameObject.SetActive(false);
+                break;
+            case GameState.Ended:
+                break;
+            default:
+                break;
+        }
+        
     }
 
     /*public void AddScore(int scoreToAdd,string boomText) 
@@ -209,6 +229,13 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        // It's over
+        // It's over (no its not because keven knows karate)
+
+        if(currentGameState != GameState.Ended)
+            endGamePanel.SetActive(true);
+
+        currentGameState = GameState.Ended;
+
+        
     }
 }

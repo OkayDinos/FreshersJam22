@@ -13,6 +13,7 @@ public class BaseCharacterController : MonoBehaviour
     public InputAction moveAction; //Move inputs
     public InputAction jumpAction; //Jump input
     public InputAction attackAction; //Attack input
+    public InputAction pauseAction; //pausing lol input
 
     public Vector3 velocity; // Velocity 
     public float maxSpeed, maxZSpeed; // The maximum speed you can run 
@@ -43,7 +44,9 @@ public class BaseCharacterController : MonoBehaviour
     float timeSinceLastAttack; // time in s since last attacking move
     bool wasLastAttackKick; //false if punch true if kick
     float lastAttackButton, comboPath; //Stops holding buttons for attacks | holds a number if it will be a multi move combo
-    
+
+    float lastPauseAction, lastJumpAction; // stops holding of pause | stops jumping after unpause xbox moment 
+    GameState lastGameState;
 
     float hunger, hungerMax; // Hunger of the character
     float timeAlive; // Time alive
@@ -71,6 +74,7 @@ public class BaseCharacterController : MonoBehaviour
         moveAction.Enable();
         jumpAction.Enable();
         attackAction.Enable();
+        pauseAction.Enable();
         distToGround = playerCollider.bounds.extents.y;
         distToEdge = playerCollider.bounds.extents.x;
         distToDepthEdge = playerCollider.bounds.extents.z;
@@ -83,6 +87,25 @@ public class BaseCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (pauseAction.ReadValue<float>() == 1 && lastPauseAction == 0)
+        {
+            Debug.Log("Frog");
+            GameManager.instance.DoPauseGame();
+            lastPauseAction = pauseAction.ReadValue<float>();
+        }
+        if (GameManager.instance.currentGameState != GameState.Playing && lastGameState == GameState.Paused) {
+            lastGameState = GameManager.instance.currentGameState;
+            lastPauseAction = pauseAction.ReadValue<float>();
+            lastJumpAction = 1;
+            return;
+        }
+        lastGameState = GameManager.instance.currentGameState;
+        lastPauseAction = pauseAction.ReadValue<float>();
+        if (GameManager.instance.currentGameState != GameState.Playing) return;
+
+        
+
+        
         //Check for pickups
         CheckPickup();
 
@@ -122,7 +145,7 @@ public class BaseCharacterController : MonoBehaviour
             flapActive = true;
         }
         //bool groundedAtTimeOfJump = IsGrounded();
-        if (jumpAction.ReadValue<float>() == 1 && (IsGrounded() || (!usedFlap && flapActive)) && !controlsDDisabled)
+        if (jumpAction.ReadValue<float>() == 1 && (IsGrounded() || (!usedFlap && flapActive)) && !controlsDDisabled && lastJumpAction == 0)
         {
             //Flapping not allowed until jump button released
             flapActive = false;
@@ -234,6 +257,8 @@ public class BaseCharacterController : MonoBehaviour
 
         //For gliding set previous x move to the current one | Not used
         lastAttackButton = attackAction.ReadValue<float>();
+        lastJumpAction = jumpAction.ReadValue<float>();
+        
 
 
     }

@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
     public static PauseMenu instance;
+    public Button _resumeButon;
 
     // Start is called before the first frame update
     void Start()
@@ -24,10 +26,13 @@ public class PauseMenu : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        _resumeButon.Select();
+    }
     void DoResumeGame()
     {
-        GameManager.instance.currentGameState = GameState.Playing;
-        gameObject.SetActive(false);
+        GameManager.instance.DoPauseGame();
     }
 
     void DoQuitGame()
