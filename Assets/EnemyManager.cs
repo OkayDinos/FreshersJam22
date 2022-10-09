@@ -62,6 +62,8 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.currentGameState != GameState.Playing) return;
+
         timer -= Time.deltaTime;
 
         if (timer <= 0)

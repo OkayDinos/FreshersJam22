@@ -90,6 +90,9 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (GameManager.instance.currentGameState != GameState.Playing) return;
+
         switch (currentState)
         {
             case AIState.IDLE:
