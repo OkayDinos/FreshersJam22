@@ -12,6 +12,8 @@ public class EnemyManager : MonoBehaviour
 
     WorldManager worldManager;
 
+    float timer;
+
     void Awake()
     {
         if (singleton == null)
@@ -27,11 +29,13 @@ public class EnemyManager : MonoBehaviour
     void Start()
     {
         worldManager = WorldManager.singleton;
+
+        timer = 5;
     }
 
-    public void SpawnInitialEnemies(Vector3 _playerPos)
+    public void SpawnEnemies(Vector3 _playerPos, int _amount)
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < _amount; i++)
         {
             float spawnPosX;
 
@@ -58,6 +62,15 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer -= Time.deltaTime;
+
+        if (timer <= 0)
+        {
+            timer = 5;
+
+            SpawnEnemies(worldManager.playerRef.transform.position, 1);
+        }
+
         List<GameObject> enemiesToDelete = new List<GameObject>();
 
         foreach (GameObject enemy in enemies)
@@ -83,6 +96,8 @@ public class EnemyManager : MonoBehaviour
         {
             enemies.Remove(enemy);
             Destroy(enemy);
+
+            SpawnEnemies(worldManager.playerRef.transform.position, 1);
         }
     }
 }

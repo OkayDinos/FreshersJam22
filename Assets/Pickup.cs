@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PickupType { SAUSAGEROLL, WRAPPER }
+
 public class Pickup : MonoBehaviour
 {
     [SerializeField] List<Sprite> sausageStates = new List<Sprite>();
 
-    int sausageState = 0;
+    public int sausageState = 0;
+
+    public PickupType pickupType;
 
     void Awake()
     {
@@ -52,9 +56,18 @@ public class Pickup : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = sausageStates[sausageState];
     }
 
-    public async void OnDropped(float _value)
+    public async void OnDropped(PickupType _type, float _value = 0)
     {
-        SetSausageState(_value);
+        pickupType = _type;
+
+        if (_type == PickupType.SAUSAGEROLL)
+        {
+            SetSausageState(_value);
+        }
+        else if (_type == PickupType.WRAPPER)
+        {
+            GetComponent<SpriteRenderer>().sprite = sausageStates[7 + Random.Range(0, 3)];
+        }
 
         float time = 1;
 

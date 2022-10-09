@@ -209,7 +209,13 @@ public class EnemyController : MonoBehaviour
         {
             GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
 
-            drop.GetComponent<Pickup>().OnDropped(foodValue);
+            drop.GetComponent<Pickup>().OnDropped(PickupType.SAUSAGEROLL,foodValue);
+        }
+        else
+        {
+            GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
+
+            drop.GetComponent<Pickup>().OnDropped(PickupType.WRAPPER);
         }
     }
 

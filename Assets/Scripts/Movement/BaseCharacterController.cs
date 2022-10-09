@@ -377,6 +377,18 @@ public class BaseCharacterController : MonoBehaviour
         {
             if (col.tag == "Pickup")
             {
+                switch (col.GetComponent<Pickup>().pickupType)
+                {
+                    case PickupType.SAUSAGEROLL:
+                        hunger += 30 * ((6 - (float)col.GetComponent<Pickup>().sausageState)/ 6);
+                        break;
+                    case PickupType.WRAPPER:
+                        
+                        break;
+                    default:
+                        break;
+                }
+
                 col.GetComponent<Pickup>().OnPickedUp();
             }
         }
@@ -386,7 +398,7 @@ public class BaseCharacterController : MonoBehaviour
     {
         timeAlive += Time.deltaTime;
 
-        hunger -= timeAlive * 0.0002f;
+        hunger -= timeAlive * 0.0003f;
 
         hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
 

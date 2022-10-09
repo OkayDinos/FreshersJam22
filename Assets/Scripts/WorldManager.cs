@@ -39,7 +39,7 @@ public class WorldManager : MonoBehaviour
 
         GenerateWorld();
 
-        enemyManager.SpawnInitialEnemies(playerRef.transform.position);
+        enemyManager.SpawnEnemies(playerRef.transform.position, 10);
     }
 
     void GenerateWorld()
