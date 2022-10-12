@@ -71,7 +71,7 @@ public class BaseCharacterController : MonoBehaviour
         flipped = false;
         attackActive = false;
         controlsDDisabled = true;
-        cameraRef = FindObjectOfType<Camera>();
+        cameraRef = Camera.main;
         //previousXMove = 0;
         flapActive = false;
         currentFrame = 0;
@@ -343,14 +343,24 @@ public class BaseCharacterController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer / time), Mathf.Lerp(0.3f, -6.2f, timer / time)), Quaternion.identity);
+            //* HACK
+            //* This async continues to run even though the camera has been destroyed.
+            //* Ideally the async function should be canceled when the camera is destroyed;
+            //* Instead we will just check if the camera is still here.
+            if (cameraRef)
+                cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer / time), Mathf.Lerp(0.3f, -6.2f, timer / time)), Quaternion.identity);
 
             await System.Threading.Tasks.Task.Yield();
         }
 
         controlsDDisabled = false;
 
-        cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -6.2f), Quaternion.identity);
+        //* HACK
+        //* This async continues to run even though the camera has been destroyed.
+        //* Ideally the async function should be canceled when the camera is destroyed;
+        //* Instead we will just check if the camera is still here.
+        if (cameraRef)
+            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -6.2f), Quaternion.identity);
     }
 
     public async void Attack()
