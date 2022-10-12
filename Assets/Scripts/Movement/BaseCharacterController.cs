@@ -37,7 +37,7 @@ public class BaseCharacterController : MonoBehaviour
     public float cameraSpeed; // Speed of the cmera moving 
     Vector3 colliderCenter; // Centerpoint of the collider 
     AudioSource playerAudio; // Audio source component
-    public List<AudioClip> audioClips = new List<AudioClip> (); 
+    public List<AudioClip> audioClips = new List<AudioClip>();
 
     //float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
     public Camera cameraRef;
@@ -59,6 +59,8 @@ public class BaseCharacterController : MonoBehaviour
 
     [SerializeField] GameObject splat;
     [SerializeField] GameObject cloud;
+
+    public LayerMask m_CollisionLayers;
 
     // Start is called before the first frame update
     void Start()
@@ -89,7 +91,7 @@ public class BaseCharacterController : MonoBehaviour
 
         lastAttackButton = 0;
 
-        hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
+        hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger / hungerMax);
     }
 
     // Update is called once per frame
@@ -101,7 +103,8 @@ public class BaseCharacterController : MonoBehaviour
             GameManager.instance.DoPauseGame();
             lastPauseAction = pauseAction.ReadValue<float>();
         }
-        if (GameManager.instance.currentGameState != GameState.Playing && lastGameState == GameState.Paused) {
+        if (GameManager.instance.currentGameState != GameState.Playing && lastGameState == GameState.Paused)
+        {
             lastGameState = GameManager.instance.currentGameState;
             lastPauseAction = pauseAction.ReadValue<float>();
             lastJumpAction = 1;
@@ -111,9 +114,9 @@ public class BaseCharacterController : MonoBehaviour
         lastPauseAction = pauseAction.ReadValue<float>();
         if (GameManager.instance.currentGameState != GameState.Playing) return;
 
-        
 
-        
+
+
         //Check for pickups
         CheckPickup();
 
@@ -149,7 +152,8 @@ public class BaseCharacterController : MonoBehaviour
 
         // Jump Action
         //Check if flap allowed. (must let go of jump button and press again to flap)
-        if (jumpAction.ReadValue<float>() == 0 && !IsGrounded()) {
+        if (jumpAction.ReadValue<float>() == 0 && !IsGrounded())
+        {
             flapActive = true;
         }
         //bool groundedAtTimeOfJump = IsGrounded();
@@ -168,7 +172,8 @@ public class BaseCharacterController : MonoBehaviour
             }
             kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, jumpVelocity, kevinRigidbody.velocity.z);
             // If wanting to move left/right launch that way
-            if (xMove != 0) {
+            if (xMove != 0)
+            {
                 // Little funky calculation stops extreme launches
                 horizSpeed = horizSpeed / desiredSpeed * desiredSpeed;
             }
@@ -182,20 +187,23 @@ public class BaseCharacterController : MonoBehaviour
         }
         // Gliding mechanic 
         //float glideAccel = 0;
-        if (!IsGrounded() && xMove != 0 && kevinRigidbody.velocity.y <= 0) {
+        if (!IsGrounded() && xMove != 0 && kevinRigidbody.velocity.y <= 0)
+        {
             playerSprite.sprite = animationSprites[7];
 
             // Allow sprite flip while gliding 
             if (xMove > 0)
             {
                 playerSprite.flipX = false;
-            } else if (xMove < 0) { playerSprite.flipX = true; }
+            }
+            else if (xMove < 0) { playerSprite.flipX = true; }
 
 
             kevinRigidbody.useGravity = false;
             //glideAccel = glideGravity * Time.deltaTime;
             kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, glideSpeed, kevinRigidbody.velocity.z);
-        } else { kevinRigidbody.useGravity = true; }
+        }
+        else { kevinRigidbody.useGravity = true; }
 
         if (!IsGrounded() && xMove == 0 && kevinRigidbody.velocity.y <= 0)
         {
@@ -207,18 +215,22 @@ public class BaseCharacterController : MonoBehaviour
         {
             playerSprite.flipX = false;
         }
-        else if (xMove < 0 && IsGrounded()) {
+        else if (xMove < 0 && IsGrounded())
+        {
             playerSprite.flipX = true;
         }
 
-        if (xMove == 0 && IsGrounded()) {
+        if (xMove == 0 && IsGrounded())
+        {
             playerSprite.sprite = animationSprites[currentFrame];
         }
-        else if (xMove != 0 && IsGrounded()) {
+        else if (xMove != 0 && IsGrounded())
+        {
             playerSprite.sprite = animationSprites[currentFrame + 1];
         }
 
-        if (timeSinceLastFrame >= (0.4 * (maxSpeed / (Mathf.Abs(horizSpeed) + maxSpeed)))) {
+        if (timeSinceLastFrame >= (0.4 * (maxSpeed / (Mathf.Abs(horizSpeed) + maxSpeed))))
+        {
             currentFrame = currentFrame == 1 ? 0 : 1;
             timeSinceLastFrame = 0;
         }
@@ -230,7 +242,8 @@ public class BaseCharacterController : MonoBehaviour
             horizSpeed += acceleration * Time.deltaTime; //Execute the acceleration
             depthSpeed += depthAcceleration * Time.deltaTime;
         }
-        else if (kevinRigidbody.velocity.y <= 0) {
+        else if (kevinRigidbody.velocity.y <= 0)
+        {
             horizSpeed += acceleration * airControlMultipler * Time.deltaTime; //Execute the acceleration
             depthSpeed += depthAcceleration * airControlMultipler * Time.deltaTime;
         }
@@ -241,13 +254,23 @@ public class BaseCharacterController : MonoBehaviour
 
         colliderCenter = playerCollider.bounds.center; //transform.position + new Vector3(0, 0.741446f, 0); //+ playerCollider.bounds.center;
 
-        //Stop Velocity at X collisions
-        if (Physics.Raycast(colliderCenter, Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; } // stop horizontal velocity when going right
-        if (Physics.Raycast(colliderCenter, -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.right, distToEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f)) { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; ; } // stop horizontal velocity when going left
+        #region Collision Fix 
+        //Stop Velocity at X-Right Collisions
+        if (Physics.Raycast(colliderCenter, Vector3.right, distToEdge + 0.1f, m_CollisionLayers)
+            || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.right, distToEdge + 0.1f, m_CollisionLayers)
+            || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.right, distToEdge + 0.1f, m_CollisionLayers))
+        { horizSpeed = horizSpeed > 0 ? 0 : horizSpeed; }
+
+        //Stop Velocity at X-Left Collisions
+        if (Physics.Raycast(colliderCenter, -Vector3.right, distToEdge + 0.1f, m_CollisionLayers)
+            || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.right, distToEdge + 0.1f, m_CollisionLayers)
+            || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.right, distToEdge + 0.1f, m_CollisionLayers))
+        { horizSpeed = horizSpeed < 0 ? 0 : horizSpeed; }
 
         //Stop Velocity at Z collisions
         if (Physics.Raycast(colliderCenter, Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed > 0 ? 0 : depthSpeed; } // stop horizontal velocity when going right
         if (Physics.Raycast(colliderCenter, -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter - Vector3.up * (distToGround - 0.1f), -Vector3.forward, distToDepthEdge + 0.1f) || Physics.Raycast(colliderCenter + Vector3.up * distToGround, -Vector3.forward, distToDepthEdge + 0.1f)) { depthSpeed = depthSpeed < 0 ? 0 : depthSpeed; ; } // stop horizontal velocity when going left
+        #endregion
 
         // Stops Z being more or less than max and min
         float clampedZ;
@@ -260,7 +283,7 @@ public class BaseCharacterController : MonoBehaviour
         // Set Velocity to the public vector3 for viewing in the engine.
         velocity = kevinRigidbody.velocity;
 
-        
+
         // Add DT to time of last frame
         timeSinceLastFrame += Time.deltaTime;
         // Add DT to time since last attack
@@ -269,7 +292,7 @@ public class BaseCharacterController : MonoBehaviour
         //For gliding set previous x move to the current one | Not used
         lastAttackButton = attackAction.ReadValue<float>();
         lastJumpAction = jumpAction.ReadValue<float>();
-        
+
 
 
     }
@@ -291,7 +314,8 @@ public class BaseCharacterController : MonoBehaviour
         }
     }
     // Little ground checker.
-    bool IsGrounded() {
+    bool IsGrounded()
+    {
         //Debug.DrawRay(colliderCenter, new Vector3(0, -(distToGround + 0.1f), 0),Color.green);
         return (Physics.Raycast(colliderCenter, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
     }
@@ -299,7 +323,7 @@ public class BaseCharacterController : MonoBehaviour
     public async void Begin(float _startPos)
     {
         float time = 1;
-        
+
         float timer = 0;
 
         cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 0.5f, 0.3f), Quaternion.identity);
@@ -319,7 +343,7 @@ public class BaseCharacterController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer/ time), Mathf.Lerp(0.3f, -6.2f, timer/ time)), Quaternion.identity);
+            cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer / time), Mathf.Lerp(0.3f, -6.2f, timer / time)), Quaternion.identity);
 
             await System.Threading.Tasks.Task.Yield();
         }
@@ -333,19 +357,20 @@ public class BaseCharacterController : MonoBehaviour
     {
         PointsType attackType = PointsType.NormalAttack;
         float time = 0.2f;
-        float damageThisTime  = 25;
+        float damageThisTime = 25;
         //Combo Checker
         if (wasLastAttackKick && timeSinceLastAttack < 1.5 && this.transform.position.y <= 1.2)
         {
             damageThisTime = 50;
             comboPath = 0;
-            playerSprite.color = new Color(255,200,0);
+            playerSprite.color = new Color(255, 200, 0);
             attackType = PointsType.Uppercut;
         }
-        else if (!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 0) {
+        else if (!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 0)
+        {
             comboPath = 1;
         }
-        else if(!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 1)
+        else if (!wasLastAttackKick && timeSinceLastAttack < 0.5 && this.transform.position.y <= 1.2 && comboPath == 1)
         {
             damageThisTime = 50;
             playerSprite.color = new Color(255, 200, 0);
@@ -371,7 +396,7 @@ public class BaseCharacterController : MonoBehaviour
         else
         {
             attackSprite = animationSprites[5];
-            wasLastAttackKick = false;  
+            wasLastAttackKick = false;
         }
         float atkDir = 1;
 
@@ -425,8 +450,8 @@ public class BaseCharacterController : MonoBehaviour
                         GameManager.instance.AddScore(PointsType.EatSausageRoll, hungerMultiplier);
                         float time = 0.5f, timer = 0;
                         col.GetComponent<Pickup>().OnPickedUp();
-                        while (timer < time) { timer += Time.deltaTime;  playerSprite.sprite = animationSprites[8]; await System.Threading.Tasks.Task.Yield(); }
-                            break;
+                        while (timer < time) { timer += Time.deltaTime; playerSprite.sprite = animationSprites[8]; await System.Threading.Tasks.Task.Yield(); }
+                        break;
                     case PickupType.WRAPPER:
                         GameManager.instance.AddScore(PointsType.WrapperPickup);
                         col.GetComponent<Pickup>().OnPickedUp();
@@ -435,7 +460,7 @@ public class BaseCharacterController : MonoBehaviour
                         break;
                 }
 
-                
+
             }
         }
     }
@@ -446,7 +471,7 @@ public class BaseCharacterController : MonoBehaviour
 
         hunger -= timeAlive * (0.018f * Time.deltaTime);
 
-        hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger/ hungerMax);
+        hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger / hungerMax);
 
         if (hunger <= 0)
         {
@@ -488,7 +513,7 @@ public class BaseCharacterController : MonoBehaviour
 
         Vector3 originalPos = transform.position;
 
-        transform.position += new Vector3( 0, -100, 0);
+        transform.position += new Vector3(0, -100, 0);
 
         float time = 0.2f;
 
@@ -579,7 +604,7 @@ public class BaseCharacterController : MonoBehaviour
 
             float scale = Mathf.Lerp(0.85f, 1, timer / time);
 
-            transform.localScale = new Vector3(scale/2, scale/2, scale/2);
+            transform.localScale = new Vector3(scale / 2, scale / 2, scale / 2);
 
             playerSprite.GetComponent<SpriteRenderer>().color = new Color(1, Mathf.Lerp(0f, 1, timer / time), Mathf.Lerp(0, 1, timer / time));
 
@@ -588,7 +613,7 @@ public class BaseCharacterController : MonoBehaviour
             await System.Threading.Tasks.Task.Yield();
         }
 
-        transform.localScale = new Vector3(0.5f,0.5f,0.5f);
+        transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
         controlsDDisabled = false;
     }

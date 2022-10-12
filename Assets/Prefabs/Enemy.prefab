@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8775587234273261984}
   - component: {fileID: 2494661490898715697}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SpriteRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8797654608127792124}
   - component: {fileID: 7844375778948432373}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HungerBar
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3501963311517414815}
   - component: {fileID: 4483566210724839819}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Healthbar
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 3837929576719710300}
   - component: {fileID: 179530479}
   - component: {fileID: 4333036875073793244}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
