@@ -59,6 +59,7 @@ public class BaseCharacterController : MonoBehaviour
 
     [SerializeField] GameObject splat;
     [SerializeField] GameObject cloud;
+    bool splatActive;
 
     public LayerMask m_CollisionLayers;
 
@@ -70,6 +71,7 @@ public class BaseCharacterController : MonoBehaviour
         hunger = hungerMax;
         flipped = false;
         attackActive = false;
+        splatActive = false;
         controlsDDisabled = true;
         cameraRef = Camera.main;
         //previousXMove = 0;
@@ -469,8 +471,6 @@ public class BaseCharacterController : MonoBehaviour
                     default:
                         break;
                 }
-
-
             }
         }
     }
@@ -511,7 +511,11 @@ public class BaseCharacterController : MonoBehaviour
         }
         else
         {
-            Splat();
+            if (!splatActive)
+            {
+                splatActive = true;
+                Splat();
+            }            
         }
     }
 
@@ -594,6 +598,8 @@ public class BaseCharacterController : MonoBehaviour
         kevinRigidbody.velocity = Vector3.zero;
 
         Destroy(cloudObject);
+
+        splatActive = false;
 
         controlsDDisabled = false;
     }
