@@ -9,11 +9,13 @@ public class MusicManager : MonoBehaviour
 
     private void Awake()
     {
+        if (MusicManager.instance) {
+            Debug.LogWarning("There is more than one music manager in this scene. Destrying Self", this);
+            Destroy(this.gameObject);
+            return;
+        }
 
-        if (MusicManager.instance)
-            Destroy(this);
-        else
-            MusicManager.instance = this;
+        MusicManager.instance = this;
 
         DontDestroyOnLoad(this.gameObject);
         RandomSong();
@@ -26,7 +28,6 @@ public class MusicManager : MonoBehaviour
         GetComponent<AudioSource>().Play();
         StartCoroutine(WaitForEnd(GetComponent<AudioSource>().clip.length));
     }
-
 
     IEnumerator WaitForEnd(float time)
     {
