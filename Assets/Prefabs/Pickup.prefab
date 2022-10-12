@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4323958435515257168}
   - component: {fileID: 4323958435515257170}
   - component: {fileID: 385693656629511319}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pickup
   m_TagString: Pickup
   m_Icon: {fileID: 0}
@@ -110,6 +110,8 @@ MonoBehaviour:
   - {fileID: 2032861944, guid: 32225fab1645b314b8bf93e8df3a9792, type: 3}
   - {fileID: -1183550876, guid: 32225fab1645b314b8bf93e8df3a9792, type: 3}
   - {fileID: -1382235857, guid: 32225fab1645b314b8bf93e8df3a9792, type: 3}
+  sausageState: 0
+  pickupType: 0
 --- !u!65 &385693656629511319
 BoxCollider:
   m_ObjectHideFlags: 0

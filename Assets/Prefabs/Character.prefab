@@ -301,9 +301,9 @@ MonoBehaviour:
   hungerBar: {fileID: 0}
   splat: {fileID: 0}
   cloud: {fileID: 0}
-  m_LayersToIgnore:
+  m_CollisionLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 63
 --- !u!82 &-7998972054070679644
 AudioSource:
   m_ObjectHideFlags: 0

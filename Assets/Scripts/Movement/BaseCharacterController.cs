@@ -411,7 +411,7 @@ public class BaseCharacterController : MonoBehaviour
 
             playerSprite.sprite = attackSprite;
 
-            Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(distToEdge * atkDir, 0, 0), new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+            Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(distToEdge * atkDir, 0, 0), new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Collide);
 
             foreach (Collider col in hit)
             {
@@ -432,7 +432,7 @@ public class BaseCharacterController : MonoBehaviour
 
     async void CheckPickup()
     {
-        Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+        Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Interaction"), QueryTriggerInteraction.Collide);
 
         foreach (Collider col in hit)
         {

@@ -174,7 +174,7 @@ public class EnemyController : MonoBehaviour
                     SetSprite(EnemySprites.SHOO2);
                     atkDuration -= Time.deltaTime;
 
-                    Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(0.5f * dir, 0, 0), new Vector3(1, 1, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+                    Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(0.5f * dir, 0, 0), new Vector3(1, 1, 1), Quaternion.identity, LayerMask.GetMask("Player"), QueryTriggerInteraction.Collide);
 
                     foreach (Collider col in hit)
                     {
@@ -212,7 +212,7 @@ public class EnemyController : MonoBehaviour
                     SetSprite(EnemySprites.ATTACKING2);
                     atkDuration -= Time.deltaTime;
 
-                    Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(0.5f * dir2, 0, 0), new Vector3(1, 1, 1), Quaternion.identity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide);
+                    Collider[] hit = Physics.OverlapBox(transform.position + new Vector3(0.5f * dir2, 0, 0), new Vector3(1, 1, 1), Quaternion.identity, LayerMask.GetMask("Player"), QueryTriggerInteraction.Collide);
 
                     foreach (Collider col in hit)
                     {
