@@ -284,6 +284,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1138417298, guid: 8ef73d811b461b346bc9756a5c92c28c, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1390106527549170917, guid: 8ef73d811b461b346bc9756a5c92c28c, type: 3}
       propertyPath: m_Name
       value: CanvasGame
@@ -387,6 +391,10 @@ PrefabInstance:
     - target: {fileID: 1390106527758593965, guid: 8ef73d811b461b346bc9756a5c92c28c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390106527837325910, guid: 8ef73d811b461b346bc9756a5c92c28c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1390106527851623604, guid: 8ef73d811b461b346bc9756a5c92c28c, type: 3}
       propertyPath: m_AnchorMax.y
