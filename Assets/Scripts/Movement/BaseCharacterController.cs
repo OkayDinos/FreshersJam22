@@ -5,6 +5,7 @@ using System.Media;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Threading.Tasks;
 
 
 public class BaseCharacterController : MonoBehaviour
@@ -454,8 +455,8 @@ public class BaseCharacterController : MonoBehaviour
                 {
                     case PickupType.SAUSAGEROLL:
 
-                        playerAudio.clip = audioClips[7];
-                        playerAudio.Play();
+                        PlayClip(audioClips[7]);
+
                         float hungerMultiplier = ((7 - (float)col.GetComponent<Pickup>().sausageState) / 7);
                         hunger += 12 * hungerMultiplier;
                         hunger = Mathf.Clamp(hunger, 0, hungerMax);
@@ -473,6 +474,24 @@ public class BaseCharacterController : MonoBehaviour
                 }
             }
         }
+    }
+    
+    async Task PlayClip(AudioClip a_Clip)
+    {
+        GameObject l_SoundEvent = new GameObject("SoundEvent", typeof(AudioSource));
+        l_SoundEvent.transform.position = this.transform.position;
+        AudioSource l_AudioSource = l_SoundEvent.GetComponent<AudioSource>();
+        l_AudioSource.clip = a_Clip;
+
+        float l_CurrentTime = 0f;
+
+        while (l_CurrentTime < a_Clip.length)
+        {
+            l_CurrentTime += Time.deltaTime;
+            await Task.Yield();
+        }
+
+        Destroy(l_SoundEvent);
     }
 
     void GetHungry()
