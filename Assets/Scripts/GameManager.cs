@@ -16,14 +16,17 @@ public class GameManager : MonoBehaviour
     public GameState currentGameState = GameState.Playing;
 
     public GameObject endGamePanel;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         if (GameManager.instance)
-            Destroy(this);
-        else
-            GameManager.instance = this;
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        GameManager.instance = this;
 
         MainScoreText = GameObject.Find("TextMainScore").GetComponent<TextMeshProUGUI>();
         scoreAdditionText = GameObject.Find("ScoreAdditionText").GetComponent<TextMeshProUGUI>();
@@ -39,11 +42,11 @@ public class GameManager : MonoBehaviour
         score = 0;
         MainScoreText.SetText(score.ToString("0000"));
     }
-    
+
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void DoPauseGame()
@@ -67,7 +70,7 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
-        
+
     }
 
     /*public void AddScore(int scoreToAdd,string boomText) 
@@ -80,7 +83,7 @@ public class GameManager : MonoBehaviour
 
     }*/
     int lastTextRandomiser = 0, textSelector = 0;
-    public async void AddScore(PointsType pointsType,float pointsMultiplier = 1)
+    public async void AddScore(PointsType pointsType, float pointsMultiplier = 1)
     {
         float time = 0.5f;
 
@@ -183,7 +186,7 @@ public class GameManager : MonoBehaviour
 
         score += scoreToAdd;
         MainScoreText.SetText(score.ToString("0000"));
-        
+
         boomText += scoreToAdd >= 0 ? $"\n<size=60%>+{scoreToAdd.ToString()}" : $"\n<size=60%>-{scoreToAdd.ToString()}";
         scoreAdditionText.color = boomColour;
         Color boomColourTransparent = new Color(boomColour.r, boomColour.g, boomColour.b, 0);
@@ -192,19 +195,19 @@ public class GameManager : MonoBehaviour
         scoreAdditionText.SetText(boomText);
         scoreAdditionTextEcho.SetText(boomText);
         scoreAdditionTransform.rotation = Quaternion.Euler(0, 0, Random.Range(-21, 20));
-        scoreAdditionTransformEcho.rotation = Quaternion.Euler(0,0, scoreAdditionTransform.rotation.eulerAngles.z + Random.Range(-1, 2));
+        scoreAdditionTransformEcho.rotation = Quaternion.Euler(0, 0, scoreAdditionTransform.rotation.eulerAngles.z + Random.Range(-1, 2));
 
         while (timer < time)
         {
             timer += Time.deltaTime;
 
-            scoreAdditionTransform.localScale = Vector3.Lerp(new Vector3(2, 2, 2), new Vector3(1, 1, 1), (Mathf.Exp(timer)-1)/time);
+            scoreAdditionTransform.localScale = Vector3.Lerp(new Vector3(2, 2, 2), new Vector3(1, 1, 1), (Mathf.Exp(timer) - 1) / time);
             scoreAdditionText.color = Vector4.Lerp(boomColourTransparent, boomColour, (Mathf.Exp(timer) - 1) / time);
 
             await System.Threading.Tasks.Task.Yield();
         }
         timer = 0;
-        while(timer < time)
+        while (timer < time)
         {
             timer += Time.deltaTime;
             scoreAdditionTransformEcho.localScale = Vector3.Lerp(new Vector3(1, 1, 1), new Vector3(3, 3, 3), (Mathf.Exp(timer) - 1) / time);
@@ -231,11 +234,11 @@ public class GameManager : MonoBehaviour
     {
         // It's over (no its not because keven knows karate)
 
-        if(currentGameState != GameState.Ended)
+        if (currentGameState != GameState.Ended)
             endGamePanel.SetActive(true);
 
         currentGameState = GameState.Ended;
 
-        
+
     }
 }
