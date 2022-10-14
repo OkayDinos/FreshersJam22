@@ -444,29 +444,32 @@ public class BaseCharacterController : MonoBehaviour
 
     async void CheckPickup()
     {
-        Collider[] hit = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Interaction"), QueryTriggerInteraction.Collide);
+        Collider[] l_Hits = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Interaction"), QueryTriggerInteraction.Collide);
 
-        foreach (Collider col in hit)
+        foreach (Collider a_Collider in l_Hits)
         {
-            if (col.tag == "Pickup")
+            if (!a_Collider)
+                continue;
+
+            if (a_Collider.tag == "Pickup")
             {
-                switch (col.GetComponent<Pickup>().pickupType)
+                switch (a_Collider.GetComponent<Pickup>().pickupType)
                 {
                     case PickupType.SAUSAGEROLL:
 
                         PlayClip(audioClips[7]);
 
-                        float hungerMultiplier = ((7 - (float)col.GetComponent<Pickup>().sausageState) / 7);
+                        float hungerMultiplier = ((7 - (float)a_Collider.GetComponent<Pickup>().sausageState) / 7);
                         hunger += 12 * hungerMultiplier;
                         hunger = Mathf.Clamp(hunger, 0, hungerMax);
                         GameManager.instance.AddScore(PointsType.EatSausageRoll, hungerMultiplier);
                         float time = 0.5f, timer = 0;
-                        col.GetComponent<Pickup>().OnPickedUp();
+                        a_Collider.GetComponent<Pickup>().OnPickedUp();
                         while (timer < time) { timer += Time.deltaTime; playerSprite.sprite = animationSprites[8]; await System.Threading.Tasks.Task.Yield(); }
                         break;
                     case PickupType.WRAPPER:
                         GameManager.instance.AddScore(PointsType.WrapperPickup);
-                        col.GetComponent<Pickup>().OnPickedUp();
+                        a_Collider.GetComponent<Pickup>().OnPickedUp();
                         break;
                     default:
                         break;
