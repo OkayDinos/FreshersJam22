@@ -13,7 +13,7 @@ public class HungerBar : MonoBehaviour
 
         if (_percentage > 0.5f)
         {
-            fillRef.color = Color.Lerp(Color.yellow, Color.green, (_percentage - 0.5f) * 2);
+            fillRef.color = Color.Lerp(Color.yellow, Color.white, (_percentage - 0.5f) * 2);
         }
         else
         {
