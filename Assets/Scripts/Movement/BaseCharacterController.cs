@@ -37,7 +37,6 @@ public class BaseCharacterController : MonoBehaviour
     bool usedFlap, flapActive; // true if player has flapped this jump | if space let go mid air then allow flap
     public float cameraSpeed; // Speed of the cmera moving 
     Vector3 colliderCenter; // Centerpoint of the collider 
-    AudioSource playerAudio; // Audio source component
     public List<AudioClip> audioClips = new List<AudioClip>();
 
     //float distToGround, distToEdge; // Distances to the edges of the collider (X&Y axis)
@@ -83,7 +82,6 @@ public class BaseCharacterController : MonoBehaviour
         //transform = GetComponent<Transform>();
         playerCollider = GetComponent<BoxCollider>();
         playerSprite = GetComponent<SpriteRenderer>();
-        playerAudio = GetComponent<AudioSource>();
         moveAction.Enable();
         jumpAction.Enable();
         attackAction.Enable();
@@ -169,8 +167,9 @@ public class BaseCharacterController : MonoBehaviour
             {
                 usedFlap = true;
                 int flapNoise = Random.Range(1, 5);
-                playerAudio.clip = audioClips[flapNoise];
-                playerAudio.Play();
+
+                PlayClip(audioClips[flapNoise]);
+
                 playerSprite.sprite = animationSprites[6]; //if flapped change sprite to flapped sprite
             }
             kevinRigidbody.velocity = new Vector3(kevinRigidbody.velocity.x, jumpVelocity, kevinRigidbody.velocity.z);
@@ -482,6 +481,7 @@ public class BaseCharacterController : MonoBehaviour
         l_SoundEvent.transform.position = this.transform.position;
         AudioSource l_AudioSource = l_SoundEvent.GetComponent<AudioSource>();
         l_AudioSource.clip = a_Clip;
+        l_AudioSource.Play();
 
         float l_CurrentTime = 0f;
 
@@ -625,8 +625,8 @@ public class BaseCharacterController : MonoBehaviour
 
     async void DamageReaction(int _direction)
     {
-        playerAudio.clip = audioClips[6];
-        playerAudio.Play();
+        PlayClip(audioClips[6]);
+
         controlsDDisabled = true;
 
         float time = 0.4f;

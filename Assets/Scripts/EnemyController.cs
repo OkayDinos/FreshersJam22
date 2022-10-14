@@ -44,7 +44,6 @@ public class EnemyController : MonoBehaviour
 
     bool isGrandma;
 
-    AudioSource playerAudioSource;
     public AudioClip grandadShoo, grannyShoo, dieNormal, dieCombo;
 
     [SerializeField] GameObject healthBar;
@@ -60,12 +59,15 @@ public class EnemyController : MonoBehaviour
 
     List<Sprite> activeSprites = new List<Sprite>();
 
+    GameObject m_Player;
+
     // Start is called before the first frame update
 
     void Awake()
     {
         toDelete = false;
-        playerAudioSource = GameObject.Find("Character").GetComponent<AudioSource>();
+
+        m_Player = GameObject.FindWithTag("Player");
     }
 
     void OnDestroy()
@@ -183,12 +185,11 @@ public class EnemyController : MonoBehaviour
                             col.GetComponent<BaseCharacterController>().TakeDamage(transform.position, EnemyAtkType.SHOO); // second argument is damage
                             if (isGrandma)
                             {
-                                playerAudioSource.clip = grannyShoo;
-                                playerAudioSource.Play();
+                                m_Player.SendMessage("PlayClip", grannyShoo);
                             }
                             else {
-                                playerAudioSource.clip = grandadShoo;
-                                playerAudioSource.Play();
+
+                                m_Player.SendMessage("PlayClip", grandadShoo);
                             }
                         }
                     }
@@ -313,12 +314,10 @@ public class EnemyController : MonoBehaviour
 
             if (attackType == PointsType.NormalAttack)
             {
-                playerAudioSource.clip = dieNormal;
-                playerAudioSource.Play();
+                m_Player.SendMessage("PlayClip", dieNormal);
             }
             else {
-                playerAudioSource.clip = dieCombo;
-                playerAudioSource.Play();
+                m_Player.SendMessage("PlayClip", dieCombo);
             }
             GameManager.instance.AddScore(attackType);
         }
