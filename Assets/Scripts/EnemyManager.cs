@@ -12,6 +12,9 @@ public class EnemyManager : MonoBehaviour
 
     WorldManager worldManager;
 
+    [SerializeField]
+    List<Color> m_ColorList = new List<Color>();
+
     float timer;
 
     void Awake()
@@ -55,6 +58,8 @@ public class EnemyManager : MonoBehaviour
     void SpawnEnemy(Vector3 _position)
     {
         GameObject enemy = Instantiate(enemyPrefab, _position, Quaternion.identity);
+
+        enemy.transform.GetChild(2).GetComponent<SpriteRenderer>().material.SetColor("_Color", m_ColorList[Random.Range(0, m_ColorList.Count)]);
 
         enemies.Add(enemy);
     }

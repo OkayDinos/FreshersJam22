@@ -750,6 +750,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 4851948159909836956, guid: 67627fbe4ad6056419faff0226c30bf3, type: 3}
+  m_ColorList:
+  - {r: 0.58905077, g: 1, b: 0.4575472, a: 0}
+  - {r: 1, g: 0.61674035, b: 0.13679248, a: 0}
 --- !u!114 &1859478091
 MonoBehaviour:
   m_ObjectHideFlags: 0
