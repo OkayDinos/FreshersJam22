@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public enum PickupType { SAUSAGEROLL, WRAPPER }
 
 public class Pickup : MonoBehaviour
 {
+    public List<Task> tasks = new List<Task>();
+    bool isCancelled;
+
     [SerializeField] List<Sprite> sausageStates = new List<Sprite>();
 
     public int sausageState = 0;
@@ -15,6 +19,19 @@ public class Pickup : MonoBehaviour
     void Awake()
     {
         GetComponent<BoxCollider>().enabled = false;
+    }
+
+    void OnDestroy()
+    {
+        isCancelled = true;
+
+        while (tasks.Count > 0)
+        {
+            if (tasks[0].Status != TaskStatus.Running)
+            {
+                tasks.RemoveAt(0);
+            }
+        }
     }
 
     public void OnPickedUp()
@@ -56,7 +73,7 @@ public class Pickup : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = sausageStates[sausageState];
     }
 
-    public async void OnDropped(PickupType _type, float _value = 0)
+    public async Task OnDropped(PickupType _type, float _value = 0)
     {
         pickupType = _type;
 
@@ -94,7 +111,10 @@ public class Pickup : MonoBehaviour
 
             transform.position += Vector3.Lerp(Vector3.zero, Vector3.right * dir, timer / time);
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         GetComponent<BoxCollider>().enabled = true;

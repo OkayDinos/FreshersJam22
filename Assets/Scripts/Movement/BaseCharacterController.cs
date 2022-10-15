@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 public class BaseCharacterController : MonoBehaviour
 {
-
+    List<Task> tasks = new List<Task>();
+    bool isCancelled;
 
     //public SimpleControls Input;
     public InputAction moveAction; //Move inputs
@@ -66,6 +67,8 @@ public class BaseCharacterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isCancelled = false;
+
         timeAlive = 120;
         hungerMax = 100;
         hunger = hungerMax;
@@ -95,6 +98,19 @@ public class BaseCharacterController : MonoBehaviour
         hungerBar.GetComponent<HungerBar>().UpdateHungerBar(hunger / hungerMax);
     }
 
+    private void OnDestroy()
+    {
+        isCancelled = true;
+
+        while (tasks.Count > 0)
+        {
+            if (tasks[0].Status != TaskStatus.Running)
+            {
+                tasks.RemoveAt(0);
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -119,7 +135,7 @@ public class BaseCharacterController : MonoBehaviour
 
 
         //Check for pickups
-        CheckPickup();
+        tasks.Add(CheckPickup());
 
         //Update Hunfer
         GetHungry();
@@ -128,7 +144,7 @@ public class BaseCharacterController : MonoBehaviour
         if (attackAction.ReadValue<float>() == 1 && !attackActive && !controlsDDisabled && timeSinceLastAttack > 0.2 && lastAttackButton == 0)
         {
             attackActive = true;
-            Attack();
+            tasks.Add(Attack());
         }
 
         // If grounded set used flap to 0 
@@ -168,7 +184,7 @@ public class BaseCharacterController : MonoBehaviour
                 usedFlap = true;
                 int flapNoise = Random.Range(1, 5);
 
-                PlayClip(audioClips[flapNoise]);
+                tasks.Add(PlayClip(audioClips[flapNoise]));
 
                 playerSprite.sprite = animationSprites[6]; //if flapped change sprite to flapped sprite
             }
@@ -322,7 +338,7 @@ public class BaseCharacterController : MonoBehaviour
         return (Physics.Raycast(colliderCenter, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge - Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter - Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f) || Physics.Raycast(colliderCenter + Vector3.right * distToEdge + Vector3.forward * distToDepthEdge, -Vector3.up, distToGround + 0.1f));
     }
 
-    public async void Begin(float _startPos)
+    public async Task Begin(float _startPos)
     {
         float time = 1;
 
@@ -334,7 +350,10 @@ public class BaseCharacterController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         timer = 0;
@@ -352,7 +371,10 @@ public class BaseCharacterController : MonoBehaviour
             if (cameraRef)
                 cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, Mathf.Lerp(0.5f, 3, timer / time), Mathf.Lerp(0.3f, -6.2f, timer / time)), Quaternion.identity);
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         controlsDDisabled = false;
@@ -365,7 +387,7 @@ public class BaseCharacterController : MonoBehaviour
             cameraRef.transform.SetPositionAndRotation(new Vector3(_startPos, 3, -6.2f), Quaternion.identity);
     }
 
-    public async void Attack()
+    public async Task Attack()
     {
         PointsType attackType = PointsType.NormalAttack;
         float time = 0.2f;
@@ -433,7 +455,10 @@ public class BaseCharacterController : MonoBehaviour
                 }
             }
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         playerSprite.sprite = lastSprite;
@@ -442,7 +467,7 @@ public class BaseCharacterController : MonoBehaviour
         attackActive = false;
     }
 
-    async void CheckPickup()
+    async Task CheckPickup()
     {
         Collider[] l_Hits = Physics.OverlapBox(transform.position, new Vector3(distToEdge, distToGround, 1), Quaternion.identity, LayerMask.GetMask("Interaction"), QueryTriggerInteraction.Collide);
 
@@ -457,7 +482,7 @@ public class BaseCharacterController : MonoBehaviour
                 {
                     case PickupType.SAUSAGEROLL:
 
-                        PlayClip(audioClips[7]);
+                        tasks.Add(PlayClip(audioClips[7]));
 
                         float hungerMultiplier = ((7 - (float)a_Collider.GetComponent<Pickup>().sausageState) / 7);
                         hunger += 12 * hungerMultiplier;
@@ -465,7 +490,14 @@ public class BaseCharacterController : MonoBehaviour
                         GameManager.instance.AddScore(PointsType.EatSausageRoll, hungerMultiplier);
                         float time = 0.5f, timer = 0;
                         a_Collider.GetComponent<Pickup>().OnPickedUp();
-                        while (timer < time) { timer += Time.deltaTime; playerSprite.sprite = animationSprites[8]; await System.Threading.Tasks.Task.Yield(); }
+                        while (timer < time) 
+                        { 
+                            timer += Time.deltaTime; 
+                            playerSprite.sprite = animationSprites[8];
+                            if (isCancelled)
+                                break;
+                            await Task.Yield(); 
+                        }
                         break;
                     case PickupType.WRAPPER:
                         GameManager.instance.AddScore(PointsType.WrapperPickup);
@@ -491,6 +523,8 @@ public class BaseCharacterController : MonoBehaviour
         while (l_CurrentTime < a_Clip.length)
         {
             l_CurrentTime += Time.deltaTime;
+            if (isCancelled)
+                break;
             await Task.Yield();
         }
 
@@ -529,19 +563,19 @@ public class BaseCharacterController : MonoBehaviour
                 dir = 1;
                 flipped = false;
             }
-            DamageReaction(dir);
+            tasks.Add(DamageReaction(dir));
         }
         else
         {
             if (!splatActive)
             {
                 splatActive = true;
-                Splat();
+                tasks.Add(Splat());
             }            
         }
     }
 
-    async void Splat()
+    async Task Splat()
     {
         controlsDDisabled = true;
 
@@ -563,7 +597,10 @@ public class BaseCharacterController : MonoBehaviour
 
             splatObject.transform.position = Vector3.Lerp(originalPos, cameraRef.transform.position + new Vector3(0, -1, 1), timer / time);
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         splatObject.transform.position = cameraRef.transform.position + new Vector3(0, -1, 1);
@@ -576,7 +613,10 @@ public class BaseCharacterController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         time = 0.8f;
@@ -589,7 +629,10 @@ public class BaseCharacterController : MonoBehaviour
 
             splatObject.transform.position = Vector3.Lerp(cameraRef.transform.position + new Vector3(0, -1, 1), cameraRef.transform.position + new Vector3(0, -4, 1), timer / time);
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         Destroy(splatObject);
@@ -612,7 +655,10 @@ public class BaseCharacterController : MonoBehaviour
 
             cloudObject.transform.position = transform.position + new Vector3(0, 0.5f, 0);
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         transform.position = originalPos + new Vector3(0, 5, 0);
@@ -626,9 +672,9 @@ public class BaseCharacterController : MonoBehaviour
         controlsDDisabled = false;
     }
 
-    async void DamageReaction(int _direction)
+    async Task DamageReaction(int _direction)
     {
-        PlayClip(audioClips[6]);
+        tasks.Add(PlayClip(audioClips[6]));
 
         controlsDDisabled = true;
 
@@ -648,7 +694,10 @@ public class BaseCharacterController : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4, 0, timer / time)), transform.position.y, transform.position.z);
 
-            await System.Threading.Tasks.Task.Yield();
+            if (isCancelled)
+                break;
+
+            await Task.Yield();
         }
 
         transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);

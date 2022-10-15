@@ -12,7 +12,9 @@ public enum EnemyAtkType { SHOO, ATTACK }
 
 public class EnemyController : MonoBehaviour
 {
-    CancellationTokenSource source = new CancellationTokenSource();
+    List<Task> tasks = new List<Task>();
+    bool isCancelled;
+
     AIState currentState;
 
     float atkCD;
@@ -68,12 +70,22 @@ public class EnemyController : MonoBehaviour
     {
         toDelete = false;
 
+        isCancelled = false;
+
         m_Player = GameObject.FindWithTag("Player");
     }
 
     void OnDestroy()
     {
-        source.Cancel();
+        isCancelled = true;
+
+        while (tasks.Count > 0)
+        {
+            if (tasks[0].Status != TaskStatus.Running) 
+            {
+                tasks.RemoveAt(0);
+            }
+        }
     }
 
     void Start()
@@ -290,7 +302,7 @@ public class EnemyController : MonoBehaviour
 
         ChangeDirection(dmgDir);
 
-        DamageReaction(_dmg, dmgDir, source.Token);
+        tasks.Add(DamageReaction(_dmg, dmgDir));
 
         healthBar.transform.localScale = new Vector3(1-(angerValue / 100), 0.06f, 1);
 
@@ -323,10 +335,10 @@ public class EnemyController : MonoBehaviour
 
     void Runaway(int _direction)
     {
-        RunawayTask(_direction, source.Token);
+        tasks.Add(RunawayTask(_direction));
     }
     
-    async void RunawayTask(int _direction, CancellationToken cancelToken)
+    async Task RunawayTask(int _direction)
     {
         Drops();
 
@@ -344,7 +356,10 @@ public class EnemyController : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * 20), transform.position.y, transform.position.z);
 
-            cancelToken.ThrowIfCancellationRequested();
+            if (isCancelled)
+            {
+                break;
+            }
 
             await Task.Yield();
         }
@@ -352,7 +367,7 @@ public class EnemyController : MonoBehaviour
         toDelete = true;
     }
     
-    async void DamageReaction(float _strength, int _direction, CancellationToken cancelToken)
+    async Task DamageReaction(float _strength, int _direction)
     {
         float time = 0.5f * (_strength / 25);
 
@@ -370,7 +385,11 @@ public class EnemyController : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4 * (_strength / 25), 0, timer / time)), transform.position.y, transform.position.z);
 
-            cancelToken.ThrowIfCancellationRequested();
+            if (isCancelled)
+            {
+                break;
+            }
+
             await Task.Yield();
         }
 
@@ -383,13 +402,17 @@ public class EnemyController : MonoBehaviour
         {
             GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
 
-            drop.GetComponent<Pickup>().OnDropped(PickupType.SAUSAGEROLL,foodValue);
+            Pickup dropScript = drop.GetComponent<Pickup>();
+
+            dropScript.tasks.Add(dropScript.OnDropped(PickupType.SAUSAGEROLL,foodValue));
         }
         else
         {
             GameObject drop = Instantiate(pickupDrop, transform.position, Quaternion.identity);
 
-            drop.GetComponent<Pickup>().OnDropped(PickupType.WRAPPER);
+            Pickup dropScript = drop.GetComponent<Pickup>();
+
+            dropScript.tasks.Add(dropScript.OnDropped(PickupType.WRAPPER));
         }
     }
 
