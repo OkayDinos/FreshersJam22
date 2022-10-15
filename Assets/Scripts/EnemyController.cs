@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using System.Threading;
 
 public enum AIState { IDLE, WALKING, ATTACKING, ATTACKING2, INJURED, RUNNINGAWAY }
 
@@ -11,7 +12,7 @@ public enum EnemyAtkType { SHOO, ATTACK }
 
 public class EnemyController : MonoBehaviour
 {
-    List<Task> tasks = new List<Task>();
+    CancellationTokenSource source = new CancellationTokenSource();
     AIState currentState;
 
     float atkCD;
@@ -72,10 +73,7 @@ public class EnemyController : MonoBehaviour
 
     void OnDestroy()
     {
-        foreach (Task task in tasks)
-        {
-            task.Dispose();
-        }
+        source.Cancel();
     }
 
     void Start()
@@ -292,7 +290,7 @@ public class EnemyController : MonoBehaviour
 
         ChangeDirection(dmgDir);
 
-        tasks.Add(DamageReaction(_dmg, dmgDir));
+        DamageReaction(_dmg, dmgDir, source.Token);
 
         healthBar.transform.localScale = new Vector3(1-(angerValue / 100), 0.06f, 1);
 
@@ -325,10 +323,10 @@ public class EnemyController : MonoBehaviour
 
     void Runaway(int _direction)
     {
-        tasks.Add(RunawayTask(_direction));
+        RunawayTask(_direction, source.Token);
     }
-
-    async Task RunawayTask(int _direction)
+    
+    async void RunawayTask(int _direction, CancellationToken cancelToken)
     {
         Drops();
 
@@ -346,13 +344,15 @@ public class EnemyController : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * 20), transform.position.y, transform.position.z);
 
-            await System.Threading.Tasks.Task.Yield();
+            cancelToken.ThrowIfCancellationRequested();
+
+            await Task.Yield();
         }
 
         toDelete = true;
     }
-
-    async Task DamageReaction(float _strength, int _direction)
+    
+    async void DamageReaction(float _strength, int _direction, CancellationToken cancelToken)
     {
         float time = 0.5f * (_strength / 25);
 
@@ -370,7 +370,8 @@ public class EnemyController : MonoBehaviour
 
             transform.position = new Vector3(transform.position.x + (_direction * Time.deltaTime * Mathf.Lerp(4 * (_strength / 25), 0, timer / time)), transform.position.y, transform.position.z);
 
-            await System.Threading.Tasks.Task.Yield();
+            cancelToken.ThrowIfCancellationRequested();
+            await Task.Yield();
         }
 
         transform.localScale = new Vector3(1,2,1);
